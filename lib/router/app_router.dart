@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/app_enums.dart';
-import '../constants/app_theme.dart';
 import '../pages/auth/login_page.dart';
 import '../pages/auth/register_page.dart';
 import '../pages/component_demo/components_page.dart';
@@ -23,11 +22,11 @@ class AppRouter {
     if (builder == null) {
       return null;
     }
-    return CupertinoPageRoute<void>(settings: settings, builder: builder);
+    return MaterialPageRoute<void>(settings: settings, builder: builder);
   }
 
   Route<dynamic> onUnknownRoute(RouteSettings settings) {
-    return CupertinoPageRoute<void>(
+    return MaterialPageRoute<void>(
       settings: const RouteSettings(name: AppRoutes.root),
       builder: (_) => const AuthGate(),
     );
@@ -70,11 +69,6 @@ class _StartupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = AppPalette.of(context);
-
-    return CupertinoPageScaffold(
-      backgroundColor: palette.surface,
-      child: const Center(child: CupertinoActivityIndicator(radius: 12)),
-    );
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

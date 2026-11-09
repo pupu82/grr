@@ -4,4 +4,6 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- The development backend is served over HTTP on the host machine. -->
+    <application android:usesCleartextTraffic="true"/>
 </manifest>

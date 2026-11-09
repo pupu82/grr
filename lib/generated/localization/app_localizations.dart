@@ -645,6 +645,132 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Sesi lokal tidak dapat dihapus sepenuhnya. Tutup aplikasi lalu masuk kembali.'**
   String get errorSessionClearFailed;
+
+  /// No description provided for @errorUnauthenticated.
+  ///
+  /// In id, this message translates to:
+  /// **'Sesi Anda telah berakhir. Silakan masuk kembali.'**
+  String get errorUnauthenticated;
+
+  /// No description provided for @errorInvalidCredentials.
+  ///
+  /// In id, this message translates to:
+  /// **'Kode karyawan atau kata sandi tidak sesuai.'**
+  String get errorInvalidCredentials;
+
+  /// No description provided for @errorAccountPending.
+  ///
+  /// In id, this message translates to:
+  /// **'Akun Anda masih menunggu persetujuan administrator.'**
+  String get errorAccountPending;
+
+  /// No description provided for @errorAccountInactive.
+  ///
+  /// In id, this message translates to:
+  /// **'Akun Anda tidak aktif. Hubungi administrator.'**
+  String get errorAccountInactive;
+
+  /// No description provided for @errorPasswordChangeRequired.
+  ///
+  /// In id, this message translates to:
+  /// **'Anda harus mengganti kata sandi sebelum melanjutkan.'**
+  String get errorPasswordChangeRequired;
+
+  /// No description provided for @errorMethodNotAllowed.
+  ///
+  /// In id, this message translates to:
+  /// **'Permintaan ini tidak didukung.'**
+  String get errorMethodNotAllowed;
+
+  /// No description provided for @errorTooManyRequests.
+  ///
+  /// In id, this message translates to:
+  /// **'Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.'**
+  String get errorTooManyRequests;
+
+  /// No description provided for @errorHttpError.
+  ///
+  /// In id, this message translates to:
+  /// **'Terjadi kesalahan yang tidak terduga. Silakan coba lagi.'**
+  String get errorHttpError;
+
+  /// No description provided for @companyName.
+  ///
+  /// In id, this message translates to:
+  /// **'PT TKG TAEKWANG INDONESIA'**
+  String get companyName;
+
+  /// No description provided for @digitalGrrSystem.
+  ///
+  /// In id, this message translates to:
+  /// **'Digital Gauge R&R System'**
+  String get digitalGrrSystem;
+
+  /// No description provided for @qualityControlPlatform.
+  ///
+  /// In id, this message translates to:
+  /// **'QUALITY CONTROL PLATFORM'**
+  String get qualityControlPlatform;
+
+  /// No description provided for @heroTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Measurement you can trust.'**
+  String get heroTitle;
+
+  /// No description provided for @heroSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Evaluasi sistem ukur yang konsisten, akurat, dan siap diaudit.'**
+  String get heroSubtitle;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Selamat datang'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Masuk menggunakan akun perusahaan Anda.'**
+  String get welcomeSubtitle;
+
+  /// No description provided for @rememberMe.
+  ///
+  /// In id, this message translates to:
+  /// **'Ingat saya'**
+  String get rememberMe;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Lupa kata sandi?'**
+  String get forgotPassword;
+
+  /// No description provided for @forgotPasswordMessage.
+  ///
+  /// In id, this message translates to:
+  /// **'Silakan hubungi administrator sistem perusahaan untuk mereset kata sandi akun Anda.'**
+  String get forgotPasswordMessage;
+
+  /// No description provided for @securityBadge.
+  ///
+  /// In id, this message translates to:
+  /// **'Akses internal terenkripsi & terproteksi'**
+  String get securityBadge;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In id, this message translates to:
+  /// **'Sudah punya akun?'**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @registerHeroSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Bergabung dengan sistem inspeksi kualitas perusahaan.'**
+  String get registerHeroSubtitle;
 }
 
 class _AppLocalizationsDelegate

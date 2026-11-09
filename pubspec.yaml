@@ -2,7 +2,7 @@ name: grr
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -45,12 +45,22 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
+  build_runner: ^2.4.15
+  flutter_gen_runner: ^5.10.0
   flutter_lints: ^6.0.0
+  flutter_native_splash: ^2.4.8
+
+flutter_gen:
+  output: lib/generated/assets/
+  line_length: 80
+
+flutter_native_splash:
+  color: "#105F5D"
+  image: assets/images/icon/TKG_SPLASH.png
+
+  android_12:
+    color: "#105F5D"
+    image: assets/images/icon/TKG_SPLASH.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -64,10 +74,9 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/logo/TKG/
+    - assets/images/logo/TKG_TAEKWANG/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -94,3 +103,15 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/pretendard-latin-400-normal.ttf
+          weight: 400
+        - asset: assets/fonts/pretendard-latin-500-normal.ttf
+          weight: 500
+        - asset: assets/fonts/pretendard-latin-600-normal.ttf
+          weight: 600
+        - asset: assets/fonts/pretendard-latin-700-normal.ttf
+          weight: 700

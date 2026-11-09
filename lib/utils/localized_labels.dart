@@ -23,7 +23,7 @@ String localizeAccountStatus(AppLocalizations l10n, AccountStatus? status) {
 
 /// Localized presentation of a backend verdict.
 ///
-/// Only the label is translated; the API value stays `Good` or `Defect`.
+/// Only the label is translated; the API value stays `good` or `defect`.
 String localizeVerdict(AppLocalizations l10n, Verdict verdict) {
   return switch (verdict) {
     Verdict.good => l10n.verdictGood,

@@ -98,6 +98,18 @@ Map<String, String> _values(AppLocalizations l10n) {
     'errorSessionRestoreFailed': l10n.errorSessionRestoreFailed,
     'errorSessionStorageFailed': l10n.errorSessionStorageFailed,
     'errorSessionClearFailed': l10n.errorSessionClearFailed,
+    'companyName': l10n.companyName,
+    'digitalGrrSystem': l10n.digitalGrrSystem,
+    'qualityControlPlatform': l10n.qualityControlPlatform,
+    'heroTitle': l10n.heroTitle,
+    'heroSubtitle': l10n.heroSubtitle,
+    'welcomeTitle': l10n.welcomeTitle,
+    'welcomeSubtitle': l10n.welcomeSubtitle,
+    'rememberMe': l10n.rememberMe,
+    'forgotPassword': l10n.forgotPassword,
+    'securityBadge': l10n.securityBadge,
+    'alreadyHaveAccount': l10n.alreadyHaveAccount,
+    'registerHeroSubtitle': l10n.registerHeroSubtitle,
   };
 }
 

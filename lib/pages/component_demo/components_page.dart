@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../components/buttons/app_button.dart';
 import '../../components/forms/app_text_field.dart';
-import '../../constants/app_theme.dart';
 import '../../generated/localization/app_localizations.dart';
+import '../../theme/app_theme.dart';
 
 /// Demo page required for every reusable component.
 ///
@@ -32,12 +32,6 @@ class _ComponentsPageState extends State<ComponentsPage> {
   bool _toggleExpanded = false;
 
   @override
-  void initState() {
-    super.initState();
-    _disabledController.text = '';
-  }
-
-  @override
   void dispose() {
     _plainController.dispose();
     _errorController.dispose();
@@ -63,13 +57,9 @@ class _ComponentsPageState extends State<ComponentsPage> {
     final palette = AppPalette.of(context);
     final l10n = AppLocalizations.of(context);
 
-    return CupertinoPageScaffold(
-      backgroundColor: palette.surface,
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(l10n.componentsPageTitle),
-        backgroundColor: palette.surface,
-      ),
-      child: SafeArea(
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.componentsPageTitle)),
+      body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.xl,
@@ -84,11 +74,10 @@ class _ComponentsPageState extends State<ComponentsPage> {
                   _DemoSection(
                     title: l10n.componentsButtonsTitle,
                     description: l10n.componentsButtonsDescription,
-                    palette: palette,
                     children: [
                       AppButton(
                         label: l10n.componentsPrimaryAction,
-                        icon: CupertinoIcons.checkmark_alt,
+                        icon: Icons.check,
                         onPressed: () {},
                       ),
                       const SizedBox(height: AppSpacing.md),
@@ -125,14 +114,13 @@ class _ComponentsPageState extends State<ComponentsPage> {
                   _DemoSection(
                     title: l10n.componentsInputsTitle,
                     description: l10n.componentsInputsDescription,
-                    palette: palette,
                     children: [
                       AppTextField(
                         controller: _plainController,
                         label: l10n.employeeCodeLabel,
                         placeholder: l10n.employeeCodePlaceholder,
                         helperText: l10n.componentsHelperText,
-                        prefixIcon: CupertinoIcons.person,
+                        prefixIcon: Icons.person_outline,
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       AppTextField(
@@ -140,7 +128,7 @@ class _ComponentsPageState extends State<ComponentsPage> {
                         label: l10n.componentsErrorFieldLabel,
                         placeholder: l10n.componentsErrorFieldPlaceholder,
                         errorText: l10n.componentsErrorFieldMessage,
-                        prefixIcon: CupertinoIcons.exclamationmark_circle,
+                        prefixIcon: Icons.error_outline,
                         onChanged: (_) => setState(() {}),
                       ),
                       const SizedBox(height: AppSpacing.lg),
@@ -148,19 +136,16 @@ class _ComponentsPageState extends State<ComponentsPage> {
                         controller: _passwordController,
                         label: l10n.componentsPasswordFieldLabel,
                         obscureText: _obscurePassword,
-                        prefixIcon: CupertinoIcons.lock,
-                        suffix: CupertinoButton(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.md,
-                          ),
+                        prefixIcon: Icons.lock_outline,
+                        suffix: IconButton(
                           onPressed: () => setState(
                             () => _obscurePassword = !_obscurePassword,
                           ),
-                          child: Icon(
+                          icon: Icon(
                             _obscurePassword
-                                ? CupertinoIcons.eye
-                                : CupertinoIcons.eye_slash,
-                            size: 18,
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            size: 20,
                             color: palette.textSecondary,
                           ),
                         ),
@@ -171,7 +156,7 @@ class _ComponentsPageState extends State<ComponentsPage> {
                         label: l10n.componentsDisabledFieldLabel,
                         placeholder: l10n.componentsDisabledFieldValue,
                         enabled: false,
-                        prefixIcon: CupertinoIcons.lock,
+                        prefixIcon: Icons.lock_outline,
                       ),
                     ],
                   ),
@@ -179,7 +164,6 @@ class _ComponentsPageState extends State<ComponentsPage> {
                   _DemoSection(
                     title: l10n.componentsInteractionTitle,
                     description: l10n.componentsInteractionDescription,
-                    palette: palette,
                     children: [
                       AppButton(
                         label: _toggleExpanded
@@ -187,8 +171,8 @@ class _ComponentsPageState extends State<ComponentsPage> {
                             : l10n.componentsShowDetails,
                         variant: AppButtonVariant.outline,
                         icon: _toggleExpanded
-                            ? CupertinoIcons.chevron_up
-                            : CupertinoIcons.chevron_down,
+                            ? Icons.expand_less
+                            : Icons.expand_more,
                         onPressed: () =>
                             setState(() => _toggleExpanded = !_toggleExpanded),
                       ),
@@ -217,41 +201,40 @@ class _DemoSection extends StatelessWidget {
   const _DemoSection({
     required this.title,
     required this.description,
-    required this.palette,
     required this.children,
   });
 
   final String title;
   final String description;
-  final AppPalette palette;
   final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        color: palette.surfaceRaised,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(color: palette.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            title,
-            style: AppTextStyles.sectionTitle.copyWith(
-              color: palette.textPrimary,
+    final palette = AppPalette.of(context);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              title,
+              style: AppTextStyles.sectionTitle.copyWith(
+                color: palette.textPrimary,
+              ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            description,
-            style: AppTextStyles.caption.copyWith(color: palette.textSecondary),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          ...children,
-        ],
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              description,
+              style: AppTextStyles.caption.copyWith(
+                color: palette.textSecondary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            ...children,
+          ],
+        ),
       ),
     );
   }

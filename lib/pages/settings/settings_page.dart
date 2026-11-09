@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants/app_theme.dart';
 import '../../generated/localization/app_localizations.dart';
 import '../../store/locale/locale_store.dart';
+import '../../theme/app_theme.dart';
 
 /// Application settings. Currently exposes the language preference.
 class SettingsPage extends StatelessWidget {
@@ -21,13 +21,9 @@ class SettingsPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final localeStore = context.watch<LocaleStore>();
 
-    return CupertinoPageScaffold(
-      backgroundColor: palette.surface,
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(l10n.settingsPageTitle),
-        backgroundColor: palette.surface,
-      ),
-      child: SafeArea(
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.settingsPageTitle)),
+      body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.xl,
@@ -53,12 +49,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: palette.surfaceRaised,
-                      borderRadius: BorderRadius.circular(AppRadius.lg),
-                      border: Border.all(color: palette.border),
-                    ),
+                  Card(
                     clipBehavior: Clip.antiAlias,
                     child: Column(
                       children: [
@@ -67,8 +58,7 @@ class SettingsPage extends StatelessWidget {
                           index < _options.length;
                           index++
                         ) ...[
-                          if (index > 0)
-                            Container(height: 1, color: palette.border),
+                          if (index > 0) const Divider(height: 1),
                           _LanguageTile(
                             option: _options[index],
                             isSelected:
@@ -120,35 +110,20 @@ class _LanguageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = AppPalette.of(context);
     final l10n = AppLocalizations.of(context);
-    final accent = CupertinoTheme.of(context).primaryColor;
+    final colorScheme = Theme.of(context).colorScheme;
 
-    return CupertinoButton(
-      padding: EdgeInsets.zero,
-      pressedOpacity: 0.7,
-      onPressed: onSelected,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.md,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                option.label(l10n),
-                style: AppTextStyles.body.copyWith(
-                  color: palette.textPrimary,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
-              ),
-            ),
-            if (isSelected)
-              Icon(CupertinoIcons.check_mark, size: 18, color: accent),
-          ],
+    return ListTile(
+      onTap: onSelected,
+      title: Text(
+        option.label(l10n),
+        style: TextStyle(
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
         ),
       ),
+      trailing: isSelected
+          ? Icon(Icons.check, color: colorScheme.primary)
+          : null,
     );
   }
 }

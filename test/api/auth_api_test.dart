@@ -43,7 +43,7 @@ void main() {
       );
 
       expect(captured.method, 'POST');
-      expect(captured.path, '/auth/login');
+      expect(captured.path, '/login');
       expect(captured.data, <String, dynamic>{
         'employee_code': 'EMP-0001',
         'password': 'secret',
@@ -122,7 +122,7 @@ void main() {
         ),
       );
 
-      expect(captured.path, '/auth/register');
+      expect(captured.path, '/register');
       final body = captured.data! as Map<String, dynamic>;
       expect(body['employee_code'], 'EMP-0002');
       expect(body['name'], 'Baru');
@@ -146,7 +146,7 @@ void main() {
       await api.logout();
 
       expect(captured.method, 'POST');
-      expect(captured.path, '/auth/logout');
+      expect(captured.path, '/logout');
     });
   });
 }

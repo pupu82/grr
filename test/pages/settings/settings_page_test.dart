@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grr/generated/localization/app_localizations.dart';
 import 'package:grr/pages/settings/settings_page.dart';
@@ -21,7 +21,7 @@ class _LocalizedApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = context.watch<LocaleStore>().locale;
 
-    return CupertinoApp(
+    return MaterialApp(
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -44,7 +44,7 @@ void main() {
     expect(find.text('Bahasa Indonesia'), findsOneWidget);
     expect(find.text('English (US)'), findsOneWidget);
     expect(find.text('한국어'), findsOneWidget);
-    expect(find.byIcon(CupertinoIcons.check_mark), findsOneWidget);
+    expect(find.byIcon(Icons.check), findsOneWidget);
   });
 
   testWidgets('switches language and persists the selection', (tester) async {
@@ -61,6 +61,6 @@ void main() {
     expect(store.locale, const Locale('en'));
     expect(storage.storedLanguageCode, 'en');
     expect(find.text('Settings'), findsOneWidget);
-    expect(find.byIcon(CupertinoIcons.check_mark), findsOneWidget);
+    expect(find.byIcon(Icons.check), findsOneWidget);
   });
 }

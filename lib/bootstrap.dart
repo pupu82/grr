@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'api/auth_api.dart';
 import 'constants/app_constants.dart';
-import 'constants/app_theme.dart';
 import 'generated/localization/app_localizations.dart';
 import 'router/app_router.dart';
 import 'router/app_routes.dart';
 import 'store/auth/auth_store.dart';
 import 'store/locale/locale_store.dart';
+import 'theme/app_theme.dart';
 import 'utils/app_config.dart';
 import 'utils/request.dart';
 import 'utils/storage.dart';
@@ -50,7 +50,7 @@ Future<void> bootstrap() async {
 }
 
 /// Root widget. Keeps the theme and localization wiring centralized.
-class GrrApp extends StatefulWidget {
+class GrrApp extends StatelessWidget {
   const GrrApp({
     super.key,
     required this.authStore,
@@ -63,60 +63,33 @@ class GrrApp extends StatefulWidget {
   final AppRouter router;
 
   @override
-  State<GrrApp> createState() => _GrrAppState();
-}
-
-class _GrrAppState extends State<GrrApp> with WidgetsBindingObserver {
-  late Brightness _brightness;
-
-  @override
-  void initState() {
-    super.initState();
-    _brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangePlatformBrightness() {
-    final next = WidgetsBinding.instance.platformDispatcher.platformBrightness;
-    if (next != _brightness) {
-      setState(() => _brightness = next);
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthStore>.value(value: widget.authStore),
-        ChangeNotifierProvider<LocaleStore>.value(value: widget.localeStore),
+        ChangeNotifierProvider<AuthStore>.value(value: authStore),
+        ChangeNotifierProvider<LocaleStore>.value(value: localeStore),
       ],
-      child: _AppView(router: widget.router, brightness: _brightness),
+      child: _AppView(router: router),
     );
   }
 }
 
 class _AppView extends StatelessWidget {
-  const _AppView({required this.router, required this.brightness});
+  const _AppView({required this.router});
 
   final AppRouter router;
-  final Brightness brightness;
 
   @override
   Widget build(BuildContext context) {
     final locale = context.watch<LocaleStore>().locale;
 
-    return CupertinoApp(
+    return MaterialApp(
       title: AppConstants.appName,
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
-      theme: brightness == Brightness.dark ? AppTheme.dark() : AppTheme.light(),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: ThemeMode.system,
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

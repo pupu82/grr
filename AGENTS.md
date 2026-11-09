@@ -47,6 +47,22 @@ Rules:
 - The primary target is Android. iOS, Web and Windows are not required; do not spend effort verifying them unless asked. Avoid unnecessary platform-specific code.
 - Check the Android internet permission and cleartext (HTTP) restrictions for any networking change.
 
+## 3.1 Asset Code Generation
+
+- Use FlutterGen (`flutter_gen_runner`) to generate type-safe Dart references for registered assets.
+- Use `build_runner` as the generator runner. Keep both packages in `dev_dependencies`.
+- After adding, removing, renaming or changing asset declarations in `pubspec.yaml`, run:
+
+```bash
+flutter pub get
+dart run build_runner build
+```
+
+- Import and use generated asset references instead of manually writing asset paths, for example `Assets.images.logo.path`.
+- Never manually edit generated asset files or create a separate manually maintained asset registry.
+- Follow the existing FlutterGen configuration and output directory. Do not change the project structure or generator configuration unnecessarily.
+- FlutterGen asset generation is separate from Flutter localization generation (`flutter gen-l10n`).
+
 ## 4. Architecture
 
 ```text

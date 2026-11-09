@@ -300,4 +300,77 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get errorSessionClearFailed =>
       'Sesi lokal tidak dapat dihapus sepenuhnya. Tutup aplikasi lalu masuk kembali.';
+
+  @override
+  String get errorUnauthenticated =>
+      'Sesi Anda telah berakhir. Silakan masuk kembali.';
+
+  @override
+  String get errorInvalidCredentials =>
+      'Kode karyawan atau kata sandi tidak sesuai.';
+
+  @override
+  String get errorAccountPending =>
+      'Akun Anda masih menunggu persetujuan administrator.';
+
+  @override
+  String get errorAccountInactive =>
+      'Akun Anda tidak aktif. Hubungi administrator.';
+
+  @override
+  String get errorPasswordChangeRequired =>
+      'Anda harus mengganti kata sandi sebelum melanjutkan.';
+
+  @override
+  String get errorMethodNotAllowed => 'Permintaan ini tidak didukung.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.';
+
+  @override
+  String get errorHttpError =>
+      'Terjadi kesalahan yang tidak terduga. Silakan coba lagi.';
+
+  @override
+  String get companyName => 'PT TKG TAEKWANG INDONESIA';
+
+  @override
+  String get digitalGrrSystem => 'Digital Gauge R&R System';
+
+  @override
+  String get qualityControlPlatform => 'QUALITY CONTROL PLATFORM';
+
+  @override
+  String get heroTitle => 'Measurement you can trust.';
+
+  @override
+  String get heroSubtitle =>
+      'Evaluasi sistem ukur yang konsisten, akurat, dan siap diaudit.';
+
+  @override
+  String get welcomeTitle => 'Selamat datang';
+
+  @override
+  String get welcomeSubtitle => 'Masuk menggunakan akun perusahaan Anda.';
+
+  @override
+  String get rememberMe => 'Ingat saya';
+
+  @override
+  String get forgotPassword => 'Lupa kata sandi?';
+
+  @override
+  String get forgotPasswordMessage =>
+      'Silakan hubungi administrator sistem perusahaan untuk mereset kata sandi akun Anda.';
+
+  @override
+  String get securityBadge => 'Akses internal terenkripsi & terproteksi';
+
+  @override
+  String get alreadyHaveAccount => 'Sudah punya akun?';
+
+  @override
+  String get registerHeroSubtitle =>
+      'Bergabung dengan sistem inspeksi kualitas perusahaan.';
 }

@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/buttons/app_button.dart';
 import '../../constants/app_constants.dart';
-import '../../constants/app_theme.dart';
 import '../../generated/localization/app_localizations.dart';
 import '../../model/auth/auth_user.dart';
 import '../../router/app_routes.dart';
 import '../../store/auth/auth_store.dart';
+import '../../theme/app_theme.dart';
 import '../../utils/localized_labels.dart';
 
 /// Landing screen for authenticated users.
@@ -24,40 +24,24 @@ class DashboardPage extends StatelessWidget {
     final store = context.watch<AuthStore>();
     final user = store.user;
 
-    return CupertinoPageScaffold(
-      backgroundColor: palette.surface,
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text(AppConstants.appName),
-        backgroundColor: palette.surface,
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(AppRoutes.settings),
-              child: Icon(
-                CupertinoIcons.settings,
-                size: 20,
-                color: palette.accent,
-              ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: store.isSubmitting ? null : store.logout,
-              child: Text(
-                l10n.dashboardLogout,
-                style: AppTextStyles.body.copyWith(
-                  color: palette.accent,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(AppConstants.appName),
+        actions: [
+          IconButton(
+            tooltip: l10n.settingsPageTitle,
+            onPressed: () =>
+                Navigator.of(context).pushNamed(AppRoutes.settings),
+            icon: const Icon(Icons.settings_outlined),
+          ),
+          TextButton(
+            onPressed: store.isSubmitting ? null : store.logout,
+            child: Text(l10n.dashboardLogout),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+        ],
       ),
-      child: SafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppSpacing.xl),
           child: Center(
@@ -77,7 +61,7 @@ class DashboardPage extends StatelessWidget {
                       AppButton(
                         label: l10n.viewComponentsAction,
                         variant: AppButtonVariant.outline,
-                        icon: CupertinoIcons.square_grid_2x2,
+                        icon: Icons.widgets_outlined,
                         expand: false,
                         onPressed: () =>
                             Navigator.of(context)
@@ -86,7 +70,7 @@ class DashboardPage extends StatelessWidget {
                       AppButton(
                         label: l10n.settingsAction,
                         variant: AppButtonVariant.outline,
-                        icon: CupertinoIcons.settings,
+                        icon: Icons.settings_outlined,
                         expand: false,
                         onPressed: () =>
                             Navigator.of(context).pushNamed(AppRoutes.settings),
@@ -119,49 +103,48 @@ class _ProfileCard extends StatelessWidget {
         ? null
         : localizeAccountStatus(l10n, user?.status);
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        color: palette.surfaceRaised,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(color: palette.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.dashboardWelcome,
-            style: AppTextStyles.caption.copyWith(color: palette.textSecondary),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            name,
-            style: AppTextStyles.title.copyWith(color: palette.textPrimary),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
-            children: [
-              _MetaChip(
-                icon: CupertinoIcons.person_badge_plus,
-                label: employeeCode,
-                palette: palette,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.dashboardWelcome,
+              style: AppTextStyles.caption.copyWith(
+                color: palette.textSecondary,
               ),
-              _MetaChip(
-                icon: CupertinoIcons.person,
-                label: roleLabel,
-                palette: palette,
-              ),
-              if (statusLabel != null)
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              name,
+              style: AppTextStyles.title.copyWith(color: palette.textPrimary),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
                 _MetaChip(
-                  icon: CupertinoIcons.checkmark_seal,
-                  label: statusLabel,
+                  icon: Icons.badge_outlined,
+                  label: employeeCode,
                   palette: palette,
                 ),
-            ],
-          ),
-        ],
+                _MetaChip(
+                  icon: Icons.person_outline,
+                  label: roleLabel,
+                  palette: palette,
+                ),
+                if (statusLabel != null)
+                  _MetaChip(
+                    icon: Icons.verified_outlined,
+                    label: statusLabel,
+                    palette: palette,
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -216,28 +199,25 @@ class _PlaceholderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        color: palette.surfaceRaised,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(color: palette.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.dashboardSummaryTitle,
-            style: AppTextStyles.sectionTitle.copyWith(
-              color: palette.textPrimary,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.dashboardSummaryTitle,
+              style: AppTextStyles.sectionTitle.copyWith(
+                color: palette.textPrimary,
+              ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            l10n.dashboardSummaryBody,
-            style: AppTextStyles.body.copyWith(color: palette.textSecondary),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l10n.dashboardSummaryBody,
+              style: AppTextStyles.body.copyWith(color: palette.textSecondary),
+            ),
+          ],
+        ),
       ),
     );
   }

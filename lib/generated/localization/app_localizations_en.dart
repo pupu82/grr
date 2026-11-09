@@ -298,4 +298,77 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorSessionClearFailed =>
       'The local session could not be fully cleared. Close the app and sign in again.';
+
+  @override
+  String get errorUnauthenticated =>
+      'Your session has ended. Please sign in again.';
+
+  @override
+  String get errorInvalidCredentials =>
+      'Employee code or password is incorrect.';
+
+  @override
+  String get errorAccountPending =>
+      'Your account is still waiting for administrator approval.';
+
+  @override
+  String get errorAccountInactive =>
+      'Your account is inactive. Contact your administrator.';
+
+  @override
+  String get errorPasswordChangeRequired =>
+      'You must change your password before continuing.';
+
+  @override
+  String get errorMethodNotAllowed => 'This request is not supported.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Too many attempts. Wait a moment and try again.';
+
+  @override
+  String get errorHttpError =>
+      'An unexpected error occurred. Please try again.';
+
+  @override
+  String get companyName => 'PT TKG TAEKWANG INDONESIA';
+
+  @override
+  String get digitalGrrSystem => 'Digital Gauge R&R System';
+
+  @override
+  String get qualityControlPlatform => 'QUALITY CONTROL PLATFORM';
+
+  @override
+  String get heroTitle => 'Measurement you can trust.';
+
+  @override
+  String get heroSubtitle =>
+      'Consistent, accurate, and audit-ready measurement system evaluation.';
+
+  @override
+  String get welcomeTitle => 'Welcome';
+
+  @override
+  String get welcomeSubtitle => 'Sign in using your company account.';
+
+  @override
+  String get rememberMe => 'Remember me';
+
+  @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get forgotPasswordMessage =>
+      'Please contact your company\'s system administrator to reset your account password.';
+
+  @override
+  String get securityBadge => 'Encrypted & protected internal access';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account?';
+
+  @override
+  String get registerHeroSubtitle =>
+      'Join the company quality inspection system.';
 }

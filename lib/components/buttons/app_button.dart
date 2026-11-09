@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-import '../../constants/app_theme.dart';
+import '../../theme/app_theme.dart';
 
 /// Visual emphasis of an [AppButton].
 enum AppButtonVariant {
@@ -43,38 +43,22 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = AppPalette.of(context);
-    final accent = CupertinoTheme.of(context).primaryColor;
-
-    final (
-      Color background,
-      Color foreground,
-      Color? border,
-    ) = switch (variant) {
-      AppButtonVariant.filled => (accent, CupertinoColors.white, null),
-      AppButtonVariant.tonal => (accent.withValues(alpha: 0.12), accent, null),
-      AppButtonVariant.outline => (
-        CupertinoColors.transparent,
-        palette.textPrimary,
-        palette.border,
-      ),
-      AppButtonVariant.text => (CupertinoColors.transparent, accent, null),
-    };
-
-    var effectiveBackground = background;
-    var contentColor = foreground;
-    if (!_isEnabled) {
-      contentColor = foreground.withValues(alpha: 0.45);
-      if (variant == AppButtonVariant.filled) {
-        effectiveBackground = background.withValues(alpha: 0.35);
-      }
-    }
+    final colorScheme = Theme.of(context).colorScheme;
+    final contentColor = _isEnabled
+        ? switch (variant) {
+            AppButtonVariant.filled => colorScheme.onPrimary,
+            _ => colorScheme.primary,
+          }
+        : colorScheme.onSurface.withValues(alpha: 0.38);
 
     final content = isLoading
         ? SizedBox(
             height: 18,
             width: 18,
-            child: CupertinoActivityIndicator(radius: 9, color: contentColor),
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(contentColor),
+            ),
           )
         : Row(
             mainAxisSize: MainAxisSize.min,
@@ -97,26 +81,23 @@ class AppButton extends StatelessWidget {
             ],
           );
 
-    final button = CupertinoButton(
-      padding: EdgeInsets.zero,
-      pressedOpacity: _isEnabled ? 0.72 : 1,
-      onPressed: _isEnabled ? onPressed : null,
-      child: Container(
-        height: 48,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-        decoration: BoxDecoration(
-          color: effectiveBackground,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          border: border == null
-              ? null
-              : Border.all(
-                  color: _isEnabled ? border : border.withValues(alpha: 0.5),
-                ),
-        ),
+    final VoidCallback? handler = _isEnabled ? onPressed : null;
+
+    final button = switch (variant) {
+      AppButtonVariant.filled => FilledButton(
+        onPressed: handler,
         child: content,
       ),
-    );
+      AppButtonVariant.tonal => FilledButton.tonal(
+        onPressed: handler,
+        child: content,
+      ),
+      AppButtonVariant.outline => OutlinedButton(
+        onPressed: handler,
+        child: content,
+      ),
+      AppButtonVariant.text => TextButton(onPressed: handler, child: content),
+    };
 
     return expand ? SizedBox(width: double.infinity, child: button) : button;
   }

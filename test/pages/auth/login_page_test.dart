@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grr/components/buttons/app_button.dart';
 import 'package:grr/constants/app_enums.dart';
-import 'package:grr/constants/app_theme.dart';
 import 'package:grr/generated/localization/app_localizations.dart';
 import 'package:grr/model/auth/auth_session.dart';
 import 'package:grr/model/auth/auth_user.dart';
 import 'package:grr/pages/auth/login_page.dart';
 import 'package:grr/store/auth/auth_store.dart';
+import 'package:grr/theme/app_theme.dart';
 import 'package:grr/utils/app_exception.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ import '../../helpers/auth_fakes.dart';
 Widget _app(AuthStore store) {
   return ChangeNotifierProvider<AuthStore>.value(
     value: store,
-    child: CupertinoApp(
+    child: MaterialApp(
       theme: AppTheme.light(),
       locale: const Locale('id'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -72,11 +72,8 @@ void main() {
 
     await tester.pumpWidget(_app(store));
     await tester.pumpAndSettle();
-    await tester.enterText(
-      find.byType(CupertinoTextField).at(0),
-      '  EMP-0001  ',
-    );
-    await tester.enterText(find.byType(CupertinoTextField).at(1), 'secret');
+    await tester.enterText(find.byType(TextField).at(0), '  EMP-0001  ');
+    await tester.enterText(find.byType(TextField).at(1), 'secret');
     await tester.tap(find.byType(AppButton));
     await tester.pumpAndSettle();
 
@@ -93,8 +90,8 @@ void main() {
 
     await tester.pumpWidget(_app(store));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(CupertinoTextField).at(0), 'EMP-0001');
-    await tester.enterText(find.byType(CupertinoTextField).at(1), 'wrong');
+    await tester.enterText(find.byType(TextField).at(0), 'EMP-0001');
+    await tester.enterText(find.byType(TextField).at(1), 'wrong');
     await tester.tap(find.byType(AppButton));
     await tester.pumpAndSettle();
 

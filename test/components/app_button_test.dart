@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grr/components/buttons/app_button.dart';
-import 'package:grr/constants/app_theme.dart';
+import 'package:grr/theme/app_theme.dart';
 
 Widget _wrap(Widget child) {
-  return CupertinoApp(
+  return MaterialApp(
     theme: AppTheme.light(),
-    home: CupertinoPageScaffold(child: Center(child: child)),
+    home: Scaffold(body: Center(child: child)),
   );
 }
 
@@ -33,7 +33,7 @@ void main() {
       ),
     );
 
-    expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
     await tester.tap(find.byType(AppButton));
     await tester.pump();

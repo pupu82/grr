@@ -286,4 +286,67 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get errorSessionClearFailed =>
       '로컬 세션을 완전히 삭제하지 못했습니다. 앱을 종료한 후 다시 로그인하세요.';
+
+  @override
+  String get errorUnauthenticated => '세션이 만료되었습니다. 다시 로그인하세요.';
+
+  @override
+  String get errorInvalidCredentials => '사원 코드 또는 비밀번호가 올바르지 않습니다.';
+
+  @override
+  String get errorAccountPending => '계정이 아직 관리자 승인을 기다리고 있습니다.';
+
+  @override
+  String get errorAccountInactive => '계정이 비활성 상태입니다. 관리자에게 문의하세요.';
+
+  @override
+  String get errorPasswordChangeRequired => '계속하려면 비밀번호를 변경해야 합니다.';
+
+  @override
+  String get errorMethodNotAllowed => '지원되지 않는 요청입니다.';
+
+  @override
+  String get errorTooManyRequests => '시도가 너무 많습니다. 잠시 후 다시 시도하세요.';
+
+  @override
+  String get errorHttpError => '예기치 않은 오류가 발생했습니다. 다시 시도하세요.';
+
+  @override
+  String get companyName => 'PT TKG TAEKWANG INDONESIA';
+
+  @override
+  String get digitalGrrSystem => 'Digital Gauge R&R System';
+
+  @override
+  String get qualityControlPlatform => 'QUALITY CONTROL PLATFORM';
+
+  @override
+  String get heroTitle => 'Measurement you can trust.';
+
+  @override
+  String get heroSubtitle => '일관되고 정확하며 감사가 가능한 측정 시스템 평가.';
+
+  @override
+  String get welcomeTitle => '환영합니다';
+
+  @override
+  String get welcomeSubtitle => '회사 계정으로 로그인하세요.';
+
+  @override
+  String get rememberMe => '로그인 상태 유지';
+
+  @override
+  String get forgotPassword => '비밀번호 찾기';
+
+  @override
+  String get forgotPasswordMessage => '계정 비밀번호를 재설정하려면 회사 시스템 관리자에게 문의해 주십시오.';
+
+  @override
+  String get securityBadge => '암호화 및 보호된 사내 전용 시스템';
+
+  @override
+  String get alreadyHaveAccount => '이미 계정이 있으신가요?';
+
+  @override
+  String get registerHeroSubtitle => '사내 품질 검사 시스템에 참여하세요.';
 }

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../constants/app_constants.dart';
+import '../constants/app_enums.dart';
 import 'app_config.dart';
 import 'app_exception.dart';
 
@@ -27,7 +28,8 @@ class ApiRequestClient {
   /// Reads the current Sanctum token for the authorization interceptor.
   final AuthTokenReader readAuthToken;
 
-  /// Invoked when the backend rejects the current token with HTTP 401.
+  /// Invoked when the backend rejects the current token with the
+  /// `unauthenticated` error code.
   final VoidCallback? onUnauthorized;
 
   /// Shared Dio instance used by API classes.
@@ -56,7 +58,12 @@ class ApiRequestClient {
           handler.next(options);
         },
         onError: (error, handler) {
-          if (error.response?.statusCode == 401) {
+          // Only `unauthenticated` means the stored token is no longer valid.
+          // `invalid_credentials` is a login failure and must not clear a
+          // session.
+          if (error.response?.statusCode == 401 &&
+              _readErrorCode(error.response?.data) !=
+                  ErrorCode.invalidCredentials) {
             onUnauthorized?.call();
           }
           handler.next(error);
@@ -81,8 +88,9 @@ Future<T> mapRequestErrors<T>(Future<T> Function() request) async {
 
 /// Maps a [DioException] into a stable [AppException].
 ///
-/// Only the exception category is exposed to the UI; backend messages are kept
-/// in [AppException.detail] for diagnostics and never rendered directly.
+/// The backend `code` is preserved so the UI can branch on it. Only the
+/// category is exposed; backend messages are kept in [AppException.detail] for
+/// diagnostics and never rendered directly.
 AppException toAppException(DioException error) {
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
@@ -113,46 +121,61 @@ AppException _fromResponse(Response<dynamic>? response) {
   final statusCode = response?.statusCode ?? 0;
   final data = response?.data;
   final detail = _readMessage(data);
+  final code = _readErrorCode(data);
+
+  return AppException(
+    kind: _kindFor(statusCode, code),
+    code: code,
+    statusCode: statusCode,
+    fieldErrors: _readFieldErrors(data),
+    detail: detail,
+  );
+}
+
+AppExceptionKind _kindFor(int statusCode, ErrorCode? code) {
+  // The contract's `code` is authoritative; the status is only a fallback.
+  switch (code) {
+    case ErrorCode.unauthenticated:
+    case ErrorCode.invalidCredentials:
+      return AppExceptionKind.unauthorized;
+    case ErrorCode.accountPending:
+    case ErrorCode.accountInactive:
+    case ErrorCode.passwordChangeRequired:
+    case ErrorCode.forbidden:
+      return AppExceptionKind.forbidden;
+    case ErrorCode.notFound:
+      return AppExceptionKind.notFound;
+    case ErrorCode.methodNotAllowed:
+      return AppExceptionKind.methodNotAllowed;
+    case ErrorCode.validationFailed:
+      return AppExceptionKind.validation;
+    case ErrorCode.tooManyRequests:
+      return AppExceptionKind.tooManyRequests;
+    case ErrorCode.httpError:
+      return AppExceptionKind.unknown;
+    case null:
+      break;
+  }
 
   return switch (statusCode) {
-    401 => AppException(
-      kind: AppExceptionKind.unauthorized,
-      statusCode: statusCode,
-      detail: detail,
-    ),
-    403 => AppException(
-      kind: AppExceptionKind.forbidden,
-      statusCode: statusCode,
-      detail: detail,
-    ),
-    404 => AppException(
-      kind: AppExceptionKind.notFound,
-      statusCode: statusCode,
-      detail: detail,
-    ),
-    409 => AppException(
-      kind: AppExceptionKind.conflict,
-      statusCode: statusCode,
-      detail: detail,
-    ),
-    422 => AppException(
-      kind: AppExceptionKind.validation,
-      statusCode: statusCode,
-      fieldErrors: _readFieldErrors(data),
-      detail: detail,
-    ),
-    0 => const AppException(kind: AppExceptionKind.invalidResponse),
-    >= 500 => AppException(
-      kind: AppExceptionKind.server,
-      statusCode: statusCode,
-      detail: detail,
-    ),
-    _ => AppException(
-      kind: AppExceptionKind.unknown,
-      statusCode: statusCode,
-      detail: detail,
-    ),
+    401 => AppExceptionKind.unauthorized,
+    403 => AppExceptionKind.forbidden,
+    404 => AppExceptionKind.notFound,
+    405 => AppExceptionKind.methodNotAllowed,
+    409 => AppExceptionKind.conflict,
+    422 => AppExceptionKind.validation,
+    429 => AppExceptionKind.tooManyRequests,
+    0 => AppExceptionKind.invalidResponse,
+    >= 500 => AppExceptionKind.server,
+    _ => AppExceptionKind.unknown,
   };
+}
+
+ErrorCode? _readErrorCode(Object? data) {
+  if (data is Map) {
+    return ErrorCode.tryParse(data['code']);
+  }
+  return null;
 }
 
 String? _readMessage(Object? data) {

@@ -43,16 +43,22 @@ abstract final class AppConstants {
 
 /// Backend endpoint paths, relative to the configured API base URL.
 ///
-/// These paths are an unverified assumption until the Laravel API contract is
-/// confirmed. Keep every path here so a contract change only requires a single
-/// edit.
+/// The paths match `docs/api-contract.md`. Keep every path here so a contract
+/// change only requires a single edit.
 abstract final class ApiEndpoints {
   /// Exchanges employee credentials for a Sanctum token.
-  static const String login = '/auth/login';
+  static const String login = '/login';
 
   /// Self-registration. Always creates a pending inspector account.
-  static const String register = '/auth/register';
+  static const String register = '/register';
 
-  /// Revokes the current Sanctum token.
-  static const String logout = '/auth/logout';
+  /// Returns the authenticated user. Allowed during a required password change.
+  static const String currentUser = '/user';
+
+  /// Revokes the current Sanctum token. Allowed during a required password
+  /// change.
+  static const String logout = '/logout';
+
+  /// Changes the password and clears the mandatory change.
+  static const String changePassword = '/password';
 }
