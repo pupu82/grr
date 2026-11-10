@@ -55,6 +55,93 @@ enum AccountStatus {
   }
 }
 
+/// How a user account was created.
+///
+/// Mirrors `App\Enums\RegistrationSource` in the Laravel application.
+enum RegistrationSource {
+  self('self'),
+  admin('admin');
+
+  const RegistrationSource(this.apiValue);
+
+  /// Value expected by the backend contract.
+  final String apiValue;
+
+  /// Parses a backend value, returning `null` for unknown values.
+  static RegistrationSource? tryParse(Object? value) {
+    if (value is! String) {
+      return null;
+    }
+    final normalized = value.trim().toLowerCase();
+    for (final source in RegistrationSource.values) {
+      if (source.apiValue == normalized) {
+        return source;
+      }
+    }
+    return null;
+  }
+}
+
+/// Inspection session lifecycle.
+///
+/// Mirrors `App\Enums\SessionStatus` in the Laravel application. Session
+/// endpoints are not part of the public contract yet, so this is used for data
+/// modeling only.
+enum SessionStatus {
+  draft('draft'),
+  inProgress('in_progress'),
+  completed('completed');
+
+  const SessionStatus(this.apiValue);
+
+  /// Value expected by the backend contract.
+  final String apiValue;
+
+  /// Parses a backend value, returning `null` for unknown values.
+  static SessionStatus? tryParse(Object? value) {
+    if (value is! String) {
+      return null;
+    }
+    final normalized = value.trim().toLowerCase();
+    for (final status in SessionStatus.values) {
+      if (status.apiValue == normalized) {
+        return status;
+      }
+    }
+    return null;
+  }
+}
+
+/// Gauge R&R judgement.
+///
+/// Mirrors `App\Enums\Judgement` in the Laravel application. The contract marks
+/// the thresholds and judgement values as provisional, so the client must not
+/// derive or display a judgement on its own.
+enum Judgement {
+  acceptable('acceptable'),
+  marginal('marginal'),
+  unacceptable('unacceptable');
+
+  const Judgement(this.apiValue);
+
+  /// Value expected by the backend contract.
+  final String apiValue;
+
+  /// Parses a backend value, returning `null` for unknown values.
+  static Judgement? tryParse(Object? value) {
+    if (value is! String) {
+      return null;
+    }
+    final normalized = value.trim().toLowerCase();
+    for (final judgement in Judgement.values) {
+      if (judgement.apiValue == normalized) {
+        return judgement;
+      }
+    }
+    return null;
+  }
+}
+
 /// Attribute inspection verdicts.
 ///
 /// The contract defines the values as lowercase `good` and `defect`. They must

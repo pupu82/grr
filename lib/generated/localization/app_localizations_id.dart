@@ -80,15 +80,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get fullNameRequired => 'Nama lengkap wajib diisi.';
 
   @override
-  String get emailOptionalLabel => 'Email (opsional)';
-
-  @override
-  String get emailPlaceholder => 'nama@perusahaan.com';
-
-  @override
-  String get emailInvalid => 'Format email belum valid.';
-
-  @override
   String get confirmPasswordLabel => 'Konfirmasi kata sandi';
 
   @override

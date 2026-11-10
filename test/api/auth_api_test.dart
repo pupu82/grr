@@ -16,7 +16,7 @@ AuthApi _api(StubHttpAdapter adapter) {
 
 Map<String, dynamic> _userJson() {
   return <String, dynamic>{
-    'uuid': 'uuid-1',
+    'id': 'uuid-1',
     'employee_code': 'EMP-0001',
     'name': 'Rina',
     'role': 'inspector',
@@ -116,7 +116,6 @@ void main() {
         const RegisterRequest(
           employeeCode: 'EMP-0002',
           name: 'Baru',
-          email: 'baru@example.test',
           password: 'secret',
           passwordConfirmation: 'secret',
         ),
@@ -126,7 +125,7 @@ void main() {
       final body = captured.data! as Map<String, dynamic>;
       expect(body['employee_code'], 'EMP-0002');
       expect(body['name'], 'Baru');
-      expect(body['email'], 'baru@example.test');
+      expect(body.containsKey('email'), isFalse);
       expect(body['password'], 'secret');
       expect(body['password_confirmation'], 'secret');
       expect(body.containsKey('role'), isFalse);

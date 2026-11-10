@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import '../../api/auth_api.dart';
 import '../../constants/app_enums.dart';
 import '../../model/auth/auth_session.dart';
-import '../../model/auth/auth_user.dart';
 import '../../model/auth/login_request.dart';
 import '../../model/auth/register_request.dart';
+import '../../model/user/user.dart';
 import '../../utils/app_exception.dart';
 import '../../utils/storage.dart';
 
@@ -26,7 +26,7 @@ class AuthStore extends ChangeNotifier {
 
   AuthStatus get status => _status;
 
-  AuthUser? get user => _session?.user;
+  User? get user => _session?.user;
 
   /// Current Sanctum token. Used only by the shared request interceptor.
   String? get token => _session?.token;
@@ -94,7 +94,6 @@ class AuthStore extends ChangeNotifier {
     required String name,
     required String password,
     required String passwordConfirmation,
-    String? email,
   }) async {
     if (_isSubmitting) {
       return false;
@@ -106,7 +105,6 @@ class AuthStore extends ChangeNotifier {
         RegisterRequest(
           employeeCode: employeeCode.trim(),
           name: name.trim(),
-          email: email,
           password: password,
           passwordConfirmation: passwordConfirmation,
         ),

@@ -499,10 +499,9 @@ class _AuthTopBar extends StatelessWidget {
 }
 
 class _AuthHero extends StatelessWidget {
-  const _AuthHero({required this.l10n, this.customSubtitle});
+  const _AuthHero({required this.l10n});
 
   final AppLocalizations l10n;
-  final String? customSubtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -531,7 +530,7 @@ class _AuthHero extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          customSubtitle ?? l10n.heroSubtitle,
+          l10n.heroSubtitle,
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.88),
             fontSize: 13.5,

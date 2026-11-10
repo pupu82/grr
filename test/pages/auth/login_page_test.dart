@@ -4,7 +4,7 @@ import 'package:grr/components/buttons/app_button.dart';
 import 'package:grr/constants/app_enums.dart';
 import 'package:grr/generated/localization/app_localizations.dart';
 import 'package:grr/model/auth/auth_session.dart';
-import 'package:grr/model/auth/auth_user.dart';
+import 'package:grr/model/user/user.dart';
 import 'package:grr/pages/auth/login_page.dart';
 import 'package:grr/store/auth/auth_store.dart';
 import 'package:grr/theme/app_theme.dart';
@@ -35,7 +35,7 @@ void _useLargeSurface(WidgetTester tester) {
 AuthSession _session() {
   return const AuthSession(
     token: 'token-1',
-    user: AuthUser(
+    user: User(
       uuid: 'uuid-1',
       employeeCode: 'EMP-0001',
       name: 'Rina',

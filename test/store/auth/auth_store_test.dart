@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grr/constants/app_enums.dart';
 import 'package:grr/model/auth/auth_session.dart';
-import 'package:grr/model/auth/auth_user.dart';
+import 'package:grr/model/user/user.dart';
 import 'package:grr/store/auth/auth_store.dart';
 import 'package:grr/utils/app_exception.dart';
 
 import '../../helpers/auth_fakes.dart';
 
-AuthUser _user() {
-  return const AuthUser(
+User _user() {
+  return const User(
     uuid: 'uuid-1',
     employeeCode: 'EMP-0001',
     name: 'Rina',
@@ -147,7 +147,6 @@ void main() {
       final success = await store.register(
         employeeCode: 'EMP-0009',
         name: 'Baru',
-        email: 'baru@example.test',
         password: 'secret',
         passwordConfirmation: 'secret',
       );

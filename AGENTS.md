@@ -1,35 +1,30 @@
 # AGENTS.md
-
-# Gauge R&R Flutter Client
+Gauge R&R Flutter Client
 
 Flutter client for the Gauge R&R application. It communicates with the Laravel REST API. Laravel is the single source of truth for authentication, authorization, business rules, data integrity and Attribute Agreement Analysis (AAA).
 
 ## 1. Source Of Truth
-
-- This `AGENTS.md` is the source of truth for Flutter implementation rules.
-- `docs/api-contract.md` in this repository is the copy of the Laravel API contract: error codes, formats, identifiers, endpoints and open decisions. Check its revision before relying on it.
-- Do not call an endpoint, read a field or branch on a value that is not described in the contract. If something is missing, stop and report it instead of guessing.
-- If the contract and the observed API disagree, report the discrepancy. Do not silently change behavior.
-- `GEMINI.md` (Laravel conventions) is background reading when it is available. It is not required to work in this repository.
-- When two requirements conflict: preserve backend business and security rules, preserve the existing architecture unless a change is justified, follow the more specific requirement, and explain unresolved conflicts before implementing.
-- Resolve repository files relative to the project root. Do not assume absolute paths.
+This `AGENTS.md` is the source of truth for Flutter implementation rules.
+`docs/api-contract.md` in this repository is the copy of the Laravel API contract: error codes, formats, identifiers, endpoints and open decisions. Check its revision before relying on it.
+Do not call an endpoint, read a field or branch on a value that is not described in the contract. If something is missing, stop and report it instead of guessing.
+If the contract and the observed API disagree, report the discrepancy. Do not silently change behavior.
+`GEMINI.md` (Laravel conventions) is background reading when it is available. It is not required to work in this repository.
+When two requirements conflict: preserve backend business and security rules, preserve the existing architecture unless a change is justified, follow the more specific requirement, and explain unresolved conflicts before implementing.
+Resolve repository files relative to the project root. Do not assume absolute paths.
 
 ## 2. Change Workflow
 
 Before modifying code:
-
-1. Inspect the existing implementation and relevant documentation.
-2. Use CodeGraph for call chains and dependencies when it is available. If it is not, inspect imports, routes, providers and API dependencies manually, and do not claim CodeGraph was used.
-3. State the expected impact scope.
-4. Follow existing project conventions unless there is a clear reason to change them.
+- Inspect the existing implementation and relevant documentation.
+- Use CodeGraph for call chains and dependencies when it is available. If it is not, inspect imports, routes, providers and API dependencies manually, and do not claim CodeGraph was used.
+- State the expected impact scope.
+- Follow existing project conventions unless there is a clear reason to change them.
 
 After modifying code:
-
-1. Run the relevant tests, `flutter analyze` and `dart format` on modified files.
-2. Update the README when documented behavior, setup, configuration, architecture or usage changes.
-3. Report what changed, the validation results and known limitations.
-
-Do not claim a command or test succeeded unless it was executed successfully. Do not use `flutter run` as a build or verification command.
+- Run the relevant tests, `flutter analyze` and `dart format` on modified files.
+- Update the README when documented behavior, setup, configuration, architecture or usage changes.
+- Report what changed, the validation results and known limitations.
+- Do not claim a command or test succeeded unless it was executed successfully. Do not use `flutter run` as a build or verification command.
 
 ## 3. Stack And Platform Scope
 
@@ -47,17 +42,14 @@ Rules:
 - The primary target is Android. iOS, Web and Windows are not required; do not spend effort verifying them unless asked. Avoid unnecessary platform-specific code.
 - Check the Android internet permission and cleartext (HTTP) restrictions for any networking change.
 
-## 3.1 Asset Code Generation
-
+### 3.1 Asset Code Generation
 - Use FlutterGen (`flutter_gen_runner`) to generate type-safe Dart references for registered assets.
 - Use `build_runner` as the generator runner. Keep both packages in `dev_dependencies`.
 - After adding, removing, renaming or changing asset declarations in `pubspec.yaml`, run:
-
-```bash
-flutter pub get
-dart run build_runner build
-```
-
+  ```bash
+  flutter pub get
+  dart run build_runner build
+  ```
 - Import and use generated asset references instead of manually writing asset paths, for example `Assets.images.logo.path`.
 - Never manually edit generated asset files or create a separate manually maintained asset registry.
 - Follow the existing FlutterGen configuration and output directory. Do not change the project structure or generator configuration unnecessarily.
@@ -81,9 +73,8 @@ lib/
 ├── bootstrap.dart
 └── main.dart
 ```
-
-- `api/`: API request declarations. `model/`: typed data models. `store/`: Provider classes. `pages/`: route-level screens. `components/`: reusable, business-agnostic UI. `utils/`: shared infrastructure.
-- Preserve a valid existing structure. Do not restructure the project without a clear reason.
+`api/`: API request declarations. `model/`: typed data models. `store/`: Provider classes. `pages/`: route-level screens. `components/`: reusable, business-agnostic UI. `utils/`: shared infrastructure.
+Preserve a valid existing structure. Do not restructure the project without a clear reason.
 
 Import boundaries:
 
@@ -93,10 +84,9 @@ Import boundaries:
 - Avoid page-to-page dependencies and circular imports.
 
 ## 5. Network And API Layer
-
-- All HTTP goes through the single Dio client configured in `lib/utils/request.dart`. Never instantiate `Dio()` in pages, widgets or API files.
+All HTTP goes through the single Dio client configured in `lib/utils/request.dart`. Never instantiate `Dio()` in pages, widgets or API files.
 - Configure base URL, timeouts, headers and response handling centrally.
-- The backend is versioned under `/api/v1`. Do not duplicate the prefix between the base URL and endpoint paths.
+- The backend is versioned under `/api/v1`. Do not duplicate the prefix between the base URL and endpoint paths. (If breaking changes occur in the future, the backend will move to `/api/v2`).
 - Attach the Sanctum bearer token and handle common HTTP errors in shared interceptors.
 - Log requests only in development. Never log passwords, tokens or other secrets.
 - Take environment values from `--dart-define` through `AppConfig`. Never hard-code production URLs or credentials. A development build must never point to the production backend.
@@ -123,18 +113,16 @@ class AuthApi {
 The example shows the responsibility boundary only. Follow the endpoint paths in the contract.
 
 ## 6. Models
-
-- Strongly typed model classes with semantic names. `UpperCamelCase` classes, `lowerCamelCase` members.
+Strongly typed model classes with semantic names. `UpperCamelCase` classes, `lowerCamelCase` members.
 - Implement `fromJson` and `toJson` where serialization is needed. Use explicit nullable types.
 - Avoid long-lived `dynamic` and raw `Map<String, dynamic>` in business logic.
 - Keep API values separate from localized display labels. Never change enum or status values to match UI wording.
-- Use the public identifier the contract defines for each resource. Never depend on internal database IDs.
+- Use the public identifier (`uuid`) the contract defines for each resource. Never depend on internal database `id`s.
 - An unknown enum value from the backend must not crash the app. Map it to an explicit "unknown" state.
 - Decimal metrics arrive as strings (see the contract). Parse them into numbers in the model, and keep `null` as "not available".
 
 ## 7. State, Pages And Side Effects
-
-- Provider classes live in `lib/store/**`, are registered through `MultiProvider` at startup, and keep loading, success, empty and error states explicit.
+Provider classes live in `lib/store/**`, are registered through `MultiProvider` at startup, and keep loading, success, empty and error states explicit.
 - Use `context.watch`, `context.read`, `Consumer` or `Selector` appropriately. Call `notifyListeners()` after valid changes. Dispose controllers and subscriptions.
 - Provider coordinates state and API calls. It does not replace the backend business layer.
 - Pages consume typed Provider state and receive typed values through constructors. No raw JSON in `build()`.
@@ -147,12 +135,12 @@ The example shows the responsibility boundary only. Follow the endpoint paths in
 ## 8. UI
 
 The UI is hybrid: Material 3 provides the app structure, and Cupertino widgets are used for the interactions listed below. The result must look like one consistent app.
+`MaterialApp` is the root, with a single `ThemeData` (`useMaterial3: true`) defined in `lib/theme/app_theme.dart`. Colors, typography, shapes and spacing come from the theme, never from hard-coded values in widgets.
 
-- `MaterialApp` is the root, with a single `ThemeData` (`useMaterial3: true`) defined in `lib/theme/app_theme.dart`. Colors, typography, shapes and spacing come from the theme, never from hard-coded values in widgets.
-- Choose the widget family per interaction type and apply it everywhere. Do not use a Material and a Cupertino version of the same control in different places.
+Choose the widget family per interaction type and apply it everywhere. Do not use a Material and a Cupertino version of the same control in different places.
 
 | Interaction | Family |
-|---|---|
+| --- | --- |
 | App structure and navigation (`Scaffold`, `AppBar`, `NavigationBar`) | Material |
 | Lists, cards, buttons, text fields, snack bars, bottom sheets | Material |
 | Confirmation and alert dialogs, action sheets | Cupertino |
@@ -171,39 +159,57 @@ Flutter only displays backend results. It never reproduces backend rules.
 - All data goes through the Laravel API. Never connect to Supabase, and never use Supabase Auth, its client libraries or RLS.
 - Preserve backend field names, enum values and identifiers. Never translate values before sending them.
 - Branch on the `code` field of error responses, never on the `message` text. Map each known `code` to a localized message.
-- Handle the documented codes: `unauthenticated` (clear the session and return to login), `invalid_credentials`, `account_pending`, `account_inactive`, `password_change_required` (route to the change-password flow), `forbidden`, `not_found`, `validation_failed` (show field errors from `errors`), `too_many_requests` (ask the user to wait) and `http_error` (unexpected error).
+
+Handle the documented codes: `unauthenticated` (clear the session and return to login), `invalid_credentials`, `account_pending`, `account_inactive`, `password_change_required` (route to the change-password flow), `forbidden`, `not_found`, `validation_failed` (show field errors from `errors`), `too_many_requests` (ask the user to wait) and `http_error` (unexpected error).
 - Keep shared network error handling in `lib/utils/request.dart` and API-specific response mapping in the API or model layer. Provider exposes meaningful error states.
 - Never swallow unexpected exceptions or show stack traces, server details or raw messages to users.
 
 ## 10. Authentication And Authorization
-
-- Login uses `employee_code` and password. Attach the Sanctum token through the shared interceptor.
+Login uses `employee_code` and password. Attach the Sanctum token through the shared interceptor.
 - Store the token in secure storage (ask before adding a package for it). Never store passwords. Clear the token and state on logout and on `unauthenticated`. Never log or display the token.
 - Self-registration always creates an `inspector` account with status `pending`. Never send or trust a client-selected role.
-- Do not check whether an `employee_code` exists through a separate request. Show the registration response generically: do not claim an account definitely exists or was created.
+- Do not check whether an `employee_code` exists through a separate request or pre-validation. Show the registration response generically: do not claim an account definitely exists or was created (the backend returns the same response for new and duplicate codes to prevent enumeration).
 - `account_pending` and `account_inactive` mean credentials were correct but no token was issued. Do not infer account status from `invalid_credentials`.
-- While a password change is required, allow only the change-password flow, profile loading and logout (see the contract). Do not allow normal navigation.
-- Roles (`admin`, `manager`, `inspector`):
+
+While `must_change_password` is true (backend returns `password_change_required`), allow only the change-password flow, profile loading and logout. Do not allow normal navigation.
+
+Roles (`admin`, `manager`, `inspector`):
 
 | Role | Responsibility |
-|---|---|
-| `admin` | Manages users, master data and inspection sessions; views all results |
-| `manager` | Read-only access to reports and exports |
-| `inspector` | Runs inspection sessions and views their own results |
+| --- | --- |
+| admin | Manages users, master data and inspection sessions; views all results |
+| manager | Read-only access to reports and exports |
+| inspector | Runs inspection sessions and views their own results |
 
 - Laravel Policies are the only authority. Hiding or disabling a button is usability, not authorization. Handle `401` and `403` correctly.
 - The manager UI offers no data-modifying actions. The inspector UI never shows other users' results.
 
 ## 11. Gauge R&R Rules
+Never calculate `miss_rate`, `false_alarm_rate` or `effectiveness` in Flutter. Laravel owns the formulas, thresholds, evaluation and judgement. Do not infer a judgement from displayed percentages, and do not invent thresholds.
+The thesis labels `miss_rate` as "P false" and `false_alarm_rate` as "P mis". These are display labels only and never replace backend identifiers.
 
-- Never calculate `miss_rate`, `false_alarm_rate` or `effectiveness` in Flutter. Laravel owns the formulas, thresholds, evaluation and judgement. Do not infer a judgement from displayed percentages, and do not invent thresholds.
-- The thesis labels `miss_rate` as "P false" and `false_alarm_rate` as "P mis". These are display labels only and never replace backend identifiers.
+**Verdicts and Outcomes:**
 - The backend verdict values are exactly `good` and `defect`. Send and store them unchanged. Never replace them with `G`, `N` or translated labels in API communication. Localized display labels are allowed.
-- The judgement criteria are provisional. Do not assume them until the contract defines them.
-- Laravel controls session creation, validation, evaluation and completion. A session has at most three trials; client-side limits are for usability only. Use backend-provided statuses, and do not assume a session is editable from how it looks.
+- Each participant has exactly one outcome per session sample: `answered` (with a `good`/`defect` verdict) or `timed_out` (without a verdict). A `timed_out` sample is never counted as `good` or `defect`.
+
+**Trials vs Real Inspection:**
+- "Trials" are physical/offline simulations performed outside the application by the Quality Engineer. Trials are **never stored or sent to the API**. There is no `trial_number` or `trial_count` in the application data model. The application records exactly **one final real-inspection verdict** per inspector per sample.
+
+**Session Flow and Position:**
+- Laravel controls session creation, validation, evaluation and completion. Use backend-provided statuses, and do not assume a session is editable from how it looks.
+- Each inspector must answer samples in strict `position` order, one sample at a time. The UI must enforce this: skipping ahead and returning to an earlier sample are both forbidden.
 - Never show answer keys to inspector users. Use the session-specific samples supplied by the backend and never rebuild historical answer keys from current master data.
+
+**Time Limits and Offline Queue:**
+- The client runs the response stopwatch and sends the elapsed `response_time_ms` for each answer. 
+- However, because answers may be queued offline and synced later, the client **must not** block the user from submitting an answer if the time limit is exceeded in wall-clock time. 
+- Repeating an identical answer payload for the same sample is idempotent on the backend, allowing offline queues to retry safely. A different payload for a locked/answered sample will be rejected by the backend.
+
+**Force-Closed Sessions:**
+- An admin can force-close an `in_progress` session. The client must handle session state changes gracefully (e.g., if a session is locked while the inspector is working) and never invent a verdict or timeout for unfinished samples.
 - Completed results are append-only. Follow the backend's workflow for corrections.
-- Fetch master data (users, plants, part types, samples, teams) from the API. Never hard-code the plant list. Do not assume deleted records are gone or that a used code is unavailable forever.
+
+Fetch master data (users, plants, part types, samples, teams) from the API. Never hard-code the plant list. Do not assume deleted records are gone or that a used code is unavailable forever.
 
 ## 12. Localization
 
@@ -212,16 +218,18 @@ Locales: `id_ID` (Indonesian, default), `en_US` (English), `ko_KR` (Korean).
 - Use Flutter's official localization. ARB sources are `lib/l10n/app_id.arb`, `app_en.arb` and `app_ko.arb`. Generated code goes under `lib/generated/localization/` and is never edited by hand. Keep keys consistent across all locales.
 - Register `GlobalMaterialLocalizations`, `GlobalWidgetsLocalizations` and `GlobalCupertinoLocalizations` delegates so both Material and Cupertino widgets are localized in Indonesian and Korean.
 - Persist the selected locale and restore it at startup. Use Indonesian when no preference is saved, and do not silently override an explicit preference with the device locale. Keep locale state in one Provider, with a language setting in the application settings.
-- Localize all user-facing text: navigation, titles, buttons, forms, dialogs, feedback, loading, empty, success and error states, dashboards, inspection screens, reports, account status messages and validation messages. Do not hard-code new strings in widgets.
-- Never translate or modify API field names, enum values, status identifiers, verdict values, UUIDs or error `code` values. A localized label never replaces the backend value in a request.
+
+Localize all user-facing text: navigation, titles, buttons, forms, dialogs, feedback, loading, empty, success and error states, dashboards, inspection screens, reports, account status messages and validation messages. Do not hard-code new strings in widgets.
+Never translate or modify API field names, enum values, status identifiers, verdict values, UUIDs or error `code` values. A localized label never replaces the backend value in a request.
 
 | Backend value | Indonesian | English | Korean |
-|---|---|---|---|
-| `good` | Baik | Good | 양호 |
-| `defect` | Cacat | Defect | 불량 |
-| `pending` | Menunggu | Pending | 대기 중 |
-| `active` | Aktif | Active | 활성 |
-| `inactive` | Tidak aktif | Inactive | 비활성 |
+| --- | --- | --- | --- |
+| good | Baik | Good | 양호 |
+| defect | Cacat | Defect | 불량 |
+| timed_out | Waktu habis | Timed out | 시간 초과 |
+| pending | Menunggu | Pending | 대기 중 |
+| active | Aktif | Active | 활성 |
+| inactive | Tidak aktif | Inactive | 비활성 |
 
 - Use locale-aware formatting for dates, numbers and percentages without changing the underlying values. Convert UTC timestamps to local time for display only.
 - Test longer translated strings, especially English and Korean, for layout overflow.
@@ -242,14 +250,13 @@ Prioritize:
 - Provider state transitions and explicit loading, success, empty and error states.
 - Authentication: generic login and registration handling, account status codes, the password-change flow and logout.
 - Error `code` to localized message mapping.
-- Role-based UI visibility and requests that use the public identifiers.
-- Inspection interactions and trial input limits.
+- Role-based UI visibility and requests that use the public identifiers (`uuid`).
+- Inspection interactions: strict `position` ordering, `response_time_ms` tracking, `timed_out` handling, and idempotent submission retries.
 - Localization: locale restoration, language switching and long strings.
 
 ## 15. Documentation And Commands
-
-- Update the README for meaningful changes to architecture, setup, environment configuration, API integration, authentication, localization, features or commands. Do not add meaningless changes to satisfy this rule.
-- When the Laravel contract changes, replace the copy in `docs/api-contract.md`, then update models, APIs and tests.
+Update the README for meaningful changes to architecture, setup, environment configuration, API integration, authentication, localization, features or commands. Do not add meaningless changes to satisfy this rule.
+When the Laravel contract changes, replace the copy in `docs/api-contract.md`, then update models, APIs and tests.
 
 ```bash
 flutter pub get

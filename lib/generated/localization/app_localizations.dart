@@ -238,24 +238,6 @@ abstract class AppLocalizations {
   /// **'Nama lengkap wajib diisi.'**
   String get fullNameRequired;
 
-  /// No description provided for @emailOptionalLabel.
-  ///
-  /// In id, this message translates to:
-  /// **'Email (opsional)'**
-  String get emailOptionalLabel;
-
-  /// No description provided for @emailPlaceholder.
-  ///
-  /// In id, this message translates to:
-  /// **'nama@perusahaan.com'**
-  String get emailPlaceholder;
-
-  /// No description provided for @emailInvalid.
-  ///
-  /// In id, this message translates to:
-  /// **'Format email belum valid.'**
-  String get emailInvalid;
-
   /// No description provided for @confirmPasswordLabel.
   ///
   /// In id, this message translates to:

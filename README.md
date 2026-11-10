@@ -24,6 +24,12 @@ lib/
 │   └── localization/      # Kode lokalisasi hasil generate (gen-l10n)
 ├── l10n/                  # Sumber ARB (app_id.arb, app_en.arb, app_ko.arb)
 ├── model/                 # Typed model data (serialisasi JSON)
+│   ├── auth/              # Login/register request dan sesi login
+│   ├── user/              # User dan TeamSummary (UserResource)
+│   ├── master_data/       # Plant, Team, PartType, Sample, SampleKeyHistory
+│   ├── session/           # InspectionSession, SessionSample, Participant, Trial, Result
+│   ├── report/            # GrrEvaluation dan SessionEvaluation
+│   └── model_json.dart    # Helper parsing JSON toleran yang dipakai semua model
 ├── pages/                 # Halaman UI / routing
 ├── router/                # Konfigurasi router navigasi
 ├── store/                 # State management Provider
@@ -33,7 +39,42 @@ lib/
 └── main.dart
 ```
 
-## 3. Konfigurasi Lingkungan
+### Batas Import
+
+- `model/**` tidak boleh mengimpor `api/**`, `pages/**`, atau `store/**`.
+- `api/**` tidak boleh mengimpor `pages/**`.
+- `components/**` tidak boleh bergantung pada halaman bisnis.
+
+## 3. Lapisan Model
+
+Model Flutter disinkronkan dengan model Eloquent Laravel di `app/Models` dan `app/Http/Resources`:
+
+| Model Flutter | Sumber Laravel | Identifier publik |
+|---|---|---|
+| `User` | `User` / `UserResource` | `id` (UUID) |
+| `TeamSummary` | `UserResource.team` | `id` (integer) |
+| `Plant` | `Plant` / `PlantResource` | `id` (integer) |
+| `Team` | `Team` / `TeamResource` | `id` (integer) |
+| `PartType` | `PartType` / `PartTypeResource` | `id` (integer) |
+| `Sample` | `Sample` / `SampleResource` | `id` (integer) |
+| `SampleKeyHistory` | `SampleKeyHistory` / `SampleKeyHistoryResource` | `id` (integer) |
+| `InspectionSession` | `InspectionSession` | `uuid` |
+| `SessionSample` | `SessionSample` | belum ditetapkan kontrak |
+| `SessionParticipant` | `SessionParticipant` | belum ditetapkan kontrak |
+| `InspectorTrial` | `InspectorTrial` | belum ditetapkan kontrak |
+| `InspectionResult` | `InspectionResult` | belum ditetapkan kontrak |
+| `GrrEvaluation` | `GrrEvaluation` | belum ditetapkan kontrak |
+| `SessionEvaluation` | `SessionEvaluation` | belum ditetapkan kontrak |
+
+Aturan yang dijaga oleh lapisan model:
+
+- Nilai enum dari backend yang tidak dikenal tidak pernah membuat aplikasi crash; nilainya dipetakan ke `null` (status "tidak diketahui").
+- Metrik desimal (`decimal:2` di Laravel) diterima sebagai string maupun angka, lalu di-parse menjadi `double?`. `null` berarti "tidak tersedia".
+- `Verdict` tetap `good`/`defect`; label terjemahan hanya untuk tampilan.
+- ID internal (bigint) pada model sesi/evaluasi disimpan sebagai field nullable dan tidak pernah dipakai sebagai identifier publik.
+- Serialisasi JSON model sesi mengikuti nama kolom Laravel karena endpoint sesi belum ada di kontrak; lihat batasan di bagian 6.
+
+## 4. Konfigurasi Lingkungan
 
 Konfigurasi runtime diinjeksi saat build menggunakan `--dart-define` melalui `AppConfig`:
 
@@ -47,7 +88,72 @@ Contoh build dengan URL kustom:
 flutter build apk --dart-define=API_BASE_URL=https://api.domain-anda.com/api/v1
 ```
 
-## 4. Perintah Pengembangan
+Catatan Android:
+
+- Izin `INTERNET` sudah dideklarasikan di manifest utama.
+- HTTP cleartext hanya diizinkan pada build `debug` dan `profile` agar dapat terhubung ke backend lokal. Build `release` tetap memblokir cleartext; gunakan HTTPS untuk rilis.
+
+## 5. Integrasi API
+
+Semua request melewati satu instance Dio di `lib/utils/request.dart`:
+
+- Base URL, timeout, header JSON, dan penanganan error dikonfigurasi terpusat.
+- Token Sanctum dilampirkan melalui interceptor; token tidak pernah dicatat atau ditampilkan.
+- Error dipetakan berdasarkan field `code`, bukan `message`.
+
+### Endpoint yang tersedia
+
+| Method | Path | Keterangan |
+|---|---|---|
+| `POST` | `/login` | Login dengan `employee_code` dan password |
+| `POST` | `/register` | Registrasi akun inspector (selalu `pending`) |
+| `GET` | `/user` | Profil pengguna saat ini |
+| `POST` | `/logout` | Mencabut token aktif |
+| `POST` | `/password` | Mengubah password |
+
+### Kode error yang ditangani
+
+| `code` | Perilaku klien |
+|---|---|
+| `unauthenticated` | Hapus sesi dan kembali ke login |
+| `invalid_credentials` | Tampilkan pesan kredensial salah |
+| `account_pending` | Tampilkan status menunggu persetujuan |
+| `account_inactive` | Tampilkan status akun nonaktif |
+| `password_change_required` | Arahkan ke alur ubah password |
+| `forbidden` | Tampilkan pesan akses ditolak |
+| `not_found` | Tampilkan pesan data tidak ditemukan |
+| `method_not_allowed` | Tampilkan pesan tidak didukung |
+| `validation_failed` | Tampilkan error per field dari `errors` |
+| `too_many_requests` | Minta pengguna menunggu |
+| `http_error` | Tampilkan pesan error tak terduga |
+
+### Batasan kontrak saat ini
+
+`docs/api-contract.md` (revisi 4) masih menandai endpoint dan field berikut sebagai **(planned)** atau **(open)**:
+
+- Sesi inspeksi, session sample, participant, trial, result, dan evaluation.
+- Metrik AAA dan kriteria judgement.
+- Report dan export.
+- Identifier publik untuk session sample.
+
+Karena itu, model sesi/evaluasi sudah disiapkan mengikuti skema Laravel tetapi **belum boleh dipanggil melalui API** sampai kontrak resmi diperbarui. Perubahan kontrak harus disertai pembaruan salinan di `docs/api-contract.md` dan model/tes terkait.
+
+## 6. Autentikasi
+
+- Login memakai `employee_code` dan password.
+- Registrasi mandiri selalu membuat akun `inspector` berstatus `pending`; role tidak pernah dikirim dari klien.
+- Selama `must_change_password` aktif, hanya alur ubah password, profil, dan logout yang diizinkan.
+- Sesi disimpan melalui storage aman; password tidak pernah disimpan.
+- Peran `admin`, `manager`, dan `inspector` hanya memengaruhi tampilan. Otorisasi tetap ditentukan Laravel Policy; aplikasi menangani `401` dan `403` dengan benar.
+
+## 7. Lokalisasi
+
+- Bahasa: `id_ID` (default), `en_US`, dan `ko_KR`.
+- Preferensi bahasa disimpan dan dipulihkan saat startup. Bahasa Indonesia dipakai bila belum ada preferensi; locale perangkat tidak menimpa preferensi eksplisit.
+- Semua teks antarmuka berasal dari ARB. Nama field API, nilai enum, status, verdict, UUID, dan `code` error tidak pernah diterjemahkan.
+- Format tanggal, angka, dan persentase mengikuti locale tanpa mengubah nilai dasarnya.
+
+## 8. Perintah Pengembangan
 
 ### Instalasi Dependensi
 ```bash
@@ -83,7 +189,7 @@ flutter build apk
 flutter build appbundle
 ```
 
-## 5. Sumber Kontrak API & Pedoman
+## 9. Sumber Kontrak API & Pedoman
 
 - **API Contract**: [docs/api-contract.md](docs/api-contract.md)
 - **Pedoman Pengembang**: [AGENTS.md](AGENTS.md)

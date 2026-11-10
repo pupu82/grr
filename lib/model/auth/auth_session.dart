@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'auth_user.dart';
+import '../user/user.dart';
 
 /// Sanctum token plus the user it belongs to.
 ///
@@ -32,7 +32,7 @@ class AuthSession {
       throw const FormatException('Login response is missing "user".');
     }
 
-    return AuthSession(token: token.trim(), user: AuthUser.fromJson(user));
+    return AuthSession(token: token.trim(), user: User.fromJson(user));
   }
 
   /// Parses a previously persisted session.
@@ -44,11 +44,11 @@ class AuthSession {
       throw const FormatException('Stored session is incomplete.');
     }
 
-    return AuthSession(token: token.trim(), user: AuthUser.fromJson(user));
+    return AuthSession(token: token.trim(), user: User.fromJson(user));
   }
 
   final String token;
-  final AuthUser user;
+  final User user;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{'token': token, 'user': user.toJson()};

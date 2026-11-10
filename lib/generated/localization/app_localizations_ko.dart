@@ -79,15 +79,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fullNameRequired => '이름을 입력해야 합니다.';
 
   @override
-  String get emailOptionalLabel => '이메일 (선택)';
-
-  @override
-  String get emailPlaceholder => 'name@company.com';
-
-  @override
-  String get emailInvalid => '이메일 형식이 올바르지 않습니다.';
-
-  @override
   String get confirmPasswordLabel => '비밀번호 확인';
 
   @override

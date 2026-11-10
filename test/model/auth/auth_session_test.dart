@@ -4,7 +4,7 @@ import 'package:grr/model/auth/auth_session.dart';
 
 Map<String, dynamic> _userJson({String role = 'inspector'}) {
   return <String, dynamic>{
-    'uuid': 'uuid-1',
+    'id': 'uuid-1',
     'employee_code': 'EMP-0001',
     'name': 'Rina',
     'role': role,

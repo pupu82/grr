@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../components/buttons/app_button.dart';
 import '../../constants/app_constants.dart';
 import '../../generated/localization/app_localizations.dart';
-import '../../model/auth/auth_user.dart';
+import '../../model/user/user.dart';
 import '../../router/app_routes.dart';
 import '../../store/auth/auth_store.dart';
 import '../../theme/app_theme.dart';
@@ -90,7 +90,7 @@ class DashboardPage extends StatelessWidget {
 class _ProfileCard extends StatelessWidget {
   const _ProfileCard({required this.user, required this.palette});
 
-  final AuthUser? user;
+  final User? user;
   final AppPalette palette;
 
   @override

@@ -80,15 +80,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fullNameRequired => 'Full name is required.';
 
   @override
-  String get emailOptionalLabel => 'Email (optional)';
-
-  @override
-  String get emailPlaceholder => 'name@company.com';
-
-  @override
-  String get emailInvalid => 'Email format is not valid.';
-
-  @override
   String get confirmPasswordLabel => 'Confirm password';
 
   @override
