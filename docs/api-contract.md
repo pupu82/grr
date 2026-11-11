@@ -1,6 +1,6 @@
 # API contract
 
-Contract revision: 8
+Contract revision: 9
 
 This file is owned by the Laravel repository. The Flutter repository keeps a copy and must treat it as the only source of truth for the HTTP API.
 
@@ -200,6 +200,7 @@ Access: read is Admin and Manager, write is Admin. Inspectors have no access to 
 | `POST` | `/api/v1/sessions/{session}/start` | Admin | Move `draft` to `in_progress` and freeze samples, participants and the time limit. |
 | `POST` | `/api/v1/sessions/{session}/start-run` | Participating Inspector | Start this inspector's run and return the first sample. Repeating it is harmless. |
 | `GET` | `/api/v1/sessions/{session}/current-sample` | Participating Inspector | The next sample this inspector must answer, or `null` when finished. |
+| `GET` | `/api/v1/sessions/{session}/results` | Admin, Manager, participating Inspector (own) | List the stored outcomes, grouped by participant. |
 | `POST` | `/api/v1/sessions/{session}/results` | Participating Inspector | Submit one outcome (`answered` or `timed_out`) for the current sample. |
 | `POST` | `/api/v1/sessions/{session}/close` | Admin | Force-close an `in_progress` session. |
 | `DELETE` | `/api/v1/sessions/{session}` | Admin | Delete a `draft` session. |
@@ -216,6 +217,9 @@ Access: read is Admin and Manager, write is Admin. Inspectors have no access to 
 - A participant is complete when they have an outcome for every sample. The session becomes `completed` automatically when every participant is complete.
 - An admin may force-close an `in_progress` session for an inspector who will never finish. Unfinished participants keep `completed_at: null`, keep the answers they already submitted and are not evaluated. No verdict or timeout is invented for missing samples.
 - A force-closed or completed session accepts no new answers (`422` keyed on `status`). Repeating an already accepted answer with an identical payload still returns `200`, so an offline queue can drain.
+- `GET /sessions/{session}/results` returns every stored outcome for admins and managers, and only the inspector's own participant row for an inspector. It is readable in every session status; a draft has no outcomes yet.
+- Results are ordered by sample `position`. A participant's `results_count` counts every outcome and `timed_out_count` counts missing data. `answer_key` is present only for admins and managers.
+- A soft-deleted inspector still appears in historical results with their stored outcomes.
 
 ### Submitting an answer
 
@@ -315,7 +319,7 @@ Session:
 
 Session sample: `id` (integer, only meaningful inside this session), `sample_id`, `code`, `position`, `answer_key` (admin/manager only, omitted for inspectors).
 
-Participant: `id` (integer), `user` (`id` = uuid, `employee_code`, `name`), `started_at`, `completed_at`, `results_count`, `is_complete`. `results_count` is present on `GET /sessions/{session}` and `POST /sessions/{session}/close`.
+Participant: `id` (integer), `user` (`id` = uuid, `employee_code`, `name`), `started_at`, `completed_at`, `results_count`, `is_complete`. `results_count` is present on `GET /sessions/{session}` and `POST /sessions/{session}/close`. On `GET /sessions/{session}/results` it also carries `timed_out_count` and the `results` array.
 
 Progress (returned by `start-run`, `current-sample` and `results`):
 
@@ -361,6 +365,57 @@ Progress (returned by `start-run`, `current-sample` and `results`):
 - `current_sample` never contains `answer_key`.
 - `result` and `result_created` are `null` on `start-run` and `current-sample`. On `results`, `result` is the stored row and `result_created` is `true` for a new row (`201`) or `false` for an idempotent repeat (`200`).
 - `result.verdict` is `null` for `timed_out`; `result.answered_at` is the device time.
+
+Results list (`GET /sessions/{session}/results`):
+
+```json
+{
+  "data": {
+    "session": {
+      "id": "6c1f0f7e-...",
+      "token": "SES-2026-0001",
+      "status": "completed",
+      "session_date": "2026-11-12",
+      "response_time_limit_ms": 90000,
+      "started_at": "2026-11-12T08:00:00+00:00",
+      "completed_at": "2026-11-12T09:00:00+00:00",
+      "samples_count": 20,
+      "participants_count": 3
+    },
+    "samples": [
+      { "id": 41, "sample_id": 5, "code": "SMP-0001", "position": 1, "answer_key": "good" }
+    ],
+    "participants": [
+      {
+        "id": 7,
+        "user": { "id": "0f1c7c1e-...", "employee_code": "EMP-1000", "name": "Siti Inspector" },
+        "started_at": "2026-11-12T08:00:00+00:00",
+        "completed_at": "2026-11-12T08:40:00+00:00",
+        "results_count": 20,
+        "timed_out_count": 1,
+        "is_complete": true,
+        "results": [
+          {
+            "id": 77,
+            "session_sample_id": 41,
+            "position": 1,
+            "outcome": "answered",
+            "verdict": "good",
+            "response_time_ms": 15240,
+            "answered_at": "2026-11-12T08:15:12+00:00",
+            "created_at": "2026-11-12T08:15:40+00:00"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+- `samples[].answer_key` is omitted for inspectors.
+- A `timed_out` row keeps `verdict: null`; it is missing data, never `good` or `defect`.
+- An inspector receives only their own participant row, while `participants_count` stays the session total.
+- `results` is empty for a participant who has not started, and for a draft session. `timed_out_count` is only present on this endpoint.
 
 ## 7. Access matrix
 
@@ -413,7 +468,7 @@ Codes are defined in `App\Enums\ErrorCode`. Adding a code is backwards compatibl
 
 ## 9. Not implemented yet
 
-Evaluations, AAA metrics and report exports. Session creation, snapshots, starting a session, per-inspector runs, answers, timeouts and completion exist. Results are visible only through the inspector's own progress payloads; there is no result list or report endpoint yet.
+Evaluations, AAA metrics and report exports. Session creation, snapshots, starting a session, per-inspector runs, answers, timeouts, completion and the per-session results list exist. There is no evaluation or report export endpoint yet.
 
 `timed_out` rows are missing data, not a verdict. Do not count them as `good` or `defect` when AAA endpoints arrive.
 
@@ -428,5 +483,4 @@ These decisions are not made. Until they are, neither side may assume an answer.
 5. **Evaluation serialization.** How decimal metrics are encoded in JSON (string with two decimals vs number) is unverified because the endpoints do not exist yet.
 6. **Repeatability.** Inspector repeatability needs repeated verdicts for the same sample, but trials are simulations outside the application and are not stored. `grr_evaluations.repeatability` is `NOT NULL` today, so the column either must be removed or given a different definition. Until decided, do not display a repeatability value.
 7. **Editing a draft session.** The time limit, samples and participants can be chosen at creation only; there is no update endpoint yet. Decide whether the client needs to edit a draft before it starts.
-8. **Result and progress history.** There is no endpoint to list a participant's stored answers after the fact, or for a manager to read a session's results. Decide the shape before building reports.
-9. **Removing a participant.** A participant who never starts leaves the session open. Today the admin can only force-close the whole session. Decide whether removing an untouched participant is needed.
+8. **Removing a participant.** A participant who never starts leaves the session open. Today the admin can only force-close the whole session. Decide whether removing an untouched participant is needed.
