@@ -173,6 +173,13 @@ Login uses `employee_code` and password. Attach the Sanctum token through the sh
 
 While `must_change_password` is true (backend returns `password_change_required`), allow only the change-password flow, profile loading and logout. Do not allow normal navigation.
 
+**Password recovery.**
+- An admin resets another user's forgotten password with `POST /api/v1/users/{user}/reset-password`. The response contains `temporary_password` exactly once. Show it once with a copy action, then discard it: never persist it, never log it, and never send it to analytics, error reporting or crash logs.
+- The admin route refuses self-targeting (`403` `forbidden`). An admin changes their own password through `POST /api/v1/password` with `current_password`.
+- A reset revokes every token of the target. If the target is signed in on this device, the next request returns `unauthenticated`: clear the stored token and session and return to login.
+- A reset leaves role, status and team unchanged. Do not hide or enable actions based on who reset whom.
+- The server-only break-glass command for the last active admin is not part of the API. Never call it from the client, document it as a client action or expose it in the UI.
+
 Roles (`admin`, `manager`, `inspector`):
 
 | Role | Responsibility |
@@ -248,7 +255,7 @@ Prioritize:
 - Model serialization and API response parsing, including decimal strings and unknown enum values.
 - Dio configuration and interceptors, including token attachment and `unauthenticated` handling.
 - Provider state transitions and explicit loading, success, empty and error states.
-- Authentication: generic login and registration handling, account status codes, the password-change flow and logout.
+- Authentication: generic login and registration handling, account status codes, the password-change flow, admin password reset with a one-time temporary password, and logout.
 - Error `code` to localized message mapping.
 - Role-based UI visibility and requests that use the public identifiers (`uuid`).
 - Inspection interactions: strict `position` ordering, `response_time_ms` tracking, `timed_out` handling, and idempotent submission retries.
