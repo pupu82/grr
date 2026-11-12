@@ -362,4 +362,130 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get registerHeroSubtitle =>
       'Join the company quality inspection system.';
+
+  @override
+  String get evaluationPageTitle => 'Session evaluation';
+
+  @override
+  String get evaluationAgreementTitle => 'Session agreement';
+
+  @override
+  String get evaluationBetweenAgreement => 'Agreement between participants';
+
+  @override
+  String get evaluationAllVsStandard => 'Agreement with standard';
+
+  @override
+  String get evaluationComparedSamples => 'Compared samples';
+
+  @override
+  String get evaluationExcludedSamples => 'Excluded samples';
+
+  @override
+  String get evaluationParticipantsCompared => 'Participants compared';
+
+  @override
+  String get evaluationNotAvailable => 'Not available';
+
+  @override
+  String get evaluationAgreementUnavailableHint =>
+      'Agreement requires at least two participants who completed the session and at least one comparable sample.';
+
+  @override
+  String get evaluationSessionToken => 'Session token';
+
+  @override
+  String get evaluationSessionDate => 'Session date';
+
+  @override
+  String get evaluationSessionStatus => 'Session status';
+
+  @override
+  String get evaluationSamplesCount => 'Samples';
+
+  @override
+  String get evaluationParticipantsCount => 'Participants';
+
+  @override
+  String get evaluationParticipantsTitle => 'Participant evaluation metrics';
+
+  @override
+  String get evaluationParticipantName => 'Participant';
+
+  @override
+  String get evaluationEffectiveness => 'Effectiveness';
+
+  @override
+  String get evaluationMissRate => 'Miss rate';
+
+  @override
+  String get evaluationFalseAlarmRate => 'False alarm rate';
+
+  @override
+  String get evaluationStatusHint => 'Status';
+
+  @override
+  String get statusIncomplete => 'Incomplete';
+
+  @override
+  String get sessionStatusDraft => 'Draft';
+
+  @override
+  String get sessionStatusInProgress => 'In progress';
+
+  @override
+  String get sessionStatusCompleted => 'Completed';
+
+  @override
+  String get sessionStatusUnknown => 'Unrecognized status';
+
+  @override
+  String get dashboardActiveSessions => 'Active sessions';
+
+  @override
+  String get dashboardInspectionProgress => 'Inspection progress';
+
+  @override
+  String get dashboardLastEffectiveness => 'Last effectiveness';
+
+  @override
+  String get dashboardQuickStart => 'Quick start session';
+
+  @override
+  String get dashboardSystemEffectiveness =>
+      'System effectiveness (All vs Standard)';
+
+  @override
+  String get dashboardJudgementDistribution => 'Judgement distribution';
+
+  @override
+  String get dashboardAgreementTrend => 'Agreement trend';
+
+  @override
+  String get dashboardAuditAttention => 'Attention required';
+
+  @override
+  String get dashboardSystemHealth => 'System health';
+
+  @override
+  String get dashboardPendingUsers => 'Pending users';
+
+  @override
+  String get dashboardForceClose => 'Force-close';
+
+  @override
+  String get judgementAcceptable => 'Acceptable';
+
+  @override
+  String get judgementMarginal => 'Marginal';
+
+  @override
+  String get judgementUnacceptable => 'Unacceptable';
+
+  @override
+  String get actionCancel => 'Cancel';
+
+  @override
+  String get forceCloseConfirmMessage =>
+      'Are you sure you want to force-close this session? Unfinished participants will keep their stored answers but will not be evaluated.';
 }

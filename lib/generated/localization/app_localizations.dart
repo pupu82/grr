@@ -753,6 +753,252 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Bergabung dengan sistem inspeksi kualitas perusahaan.'**
   String get registerHeroSubtitle;
+
+  /// No description provided for @evaluationPageTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Evaluasi sesi'**
+  String get evaluationPageTitle;
+
+  /// No description provided for @evaluationAgreementTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Kesesuaian sesi'**
+  String get evaluationAgreementTitle;
+
+  /// No description provided for @evaluationBetweenAgreement.
+  ///
+  /// In id, this message translates to:
+  /// **'Kesesuaian antar peserta'**
+  String get evaluationBetweenAgreement;
+
+  /// No description provided for @evaluationAllVsStandard.
+  ///
+  /// In id, this message translates to:
+  /// **'Kesesuaian dengan standar'**
+  String get evaluationAllVsStandard;
+
+  /// No description provided for @evaluationComparedSamples.
+  ///
+  /// In id, this message translates to:
+  /// **'Sampel dibandingkan'**
+  String get evaluationComparedSamples;
+
+  /// No description provided for @evaluationExcludedSamples.
+  ///
+  /// In id, this message translates to:
+  /// **'Sampel dikecualikan'**
+  String get evaluationExcludedSamples;
+
+  /// No description provided for @evaluationParticipantsCompared.
+  ///
+  /// In id, this message translates to:
+  /// **'Peserta dibandingkan'**
+  String get evaluationParticipantsCompared;
+
+  /// No description provided for @evaluationNotAvailable.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak tersedia'**
+  String get evaluationNotAvailable;
+
+  /// No description provided for @evaluationAgreementUnavailableHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Kesesuaian membutuhkan minimal dua peserta yang menyelesaikan sesi dan minimal satu sampel yang dapat dibandingkan.'**
+  String get evaluationAgreementUnavailableHint;
+
+  /// No description provided for @evaluationSessionToken.
+  ///
+  /// In id, this message translates to:
+  /// **'Token sesi'**
+  String get evaluationSessionToken;
+
+  /// No description provided for @evaluationSessionDate.
+  ///
+  /// In id, this message translates to:
+  /// **'Tanggal sesi'**
+  String get evaluationSessionDate;
+
+  /// No description provided for @evaluationSessionStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'Status sesi'**
+  String get evaluationSessionStatus;
+
+  /// No description provided for @evaluationSamplesCount.
+  ///
+  /// In id, this message translates to:
+  /// **'Jumlah sampel'**
+  String get evaluationSamplesCount;
+
+  /// No description provided for @evaluationParticipantsCount.
+  ///
+  /// In id, this message translates to:
+  /// **'Jumlah peserta'**
+  String get evaluationParticipantsCount;
+
+  /// No description provided for @evaluationParticipantsTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Metrik evaluasi peserta'**
+  String get evaluationParticipantsTitle;
+
+  /// No description provided for @evaluationParticipantName.
+  ///
+  /// In id, this message translates to:
+  /// **'Peserta'**
+  String get evaluationParticipantName;
+
+  /// No description provided for @evaluationEffectiveness.
+  ///
+  /// In id, this message translates to:
+  /// **'Efektivitas'**
+  String get evaluationEffectiveness;
+
+  /// No description provided for @evaluationMissRate.
+  ///
+  /// In id, this message translates to:
+  /// **'Tingkat lolos'**
+  String get evaluationMissRate;
+
+  /// No description provided for @evaluationFalseAlarmRate.
+  ///
+  /// In id, this message translates to:
+  /// **'Tingkat alarm palsu'**
+  String get evaluationFalseAlarmRate;
+
+  /// No description provided for @evaluationStatusHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Status'**
+  String get evaluationStatusHint;
+
+  /// No description provided for @statusIncomplete.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum selesai'**
+  String get statusIncomplete;
+
+  /// No description provided for @sessionStatusDraft.
+  ///
+  /// In id, this message translates to:
+  /// **'Draf'**
+  String get sessionStatusDraft;
+
+  /// No description provided for @sessionStatusInProgress.
+  ///
+  /// In id, this message translates to:
+  /// **'Berlangsung'**
+  String get sessionStatusInProgress;
+
+  /// No description provided for @sessionStatusCompleted.
+  ///
+  /// In id, this message translates to:
+  /// **'Selesai'**
+  String get sessionStatusCompleted;
+
+  /// No description provided for @sessionStatusUnknown.
+  ///
+  /// In id, this message translates to:
+  /// **'Status belum dikenali'**
+  String get sessionStatusUnknown;
+
+  /// No description provided for @dashboardActiveSessions.
+  ///
+  /// In id, this message translates to:
+  /// **'Sesi aktif'**
+  String get dashboardActiveSessions;
+
+  /// No description provided for @dashboardInspectionProgress.
+  ///
+  /// In id, this message translates to:
+  /// **'Progress inspeksi'**
+  String get dashboardInspectionProgress;
+
+  /// No description provided for @dashboardLastEffectiveness.
+  ///
+  /// In id, this message translates to:
+  /// **'Efektivitas terakhir'**
+  String get dashboardLastEffectiveness;
+
+  /// No description provided for @dashboardQuickStart.
+  ///
+  /// In id, this message translates to:
+  /// **'Mulai sesi cepat'**
+  String get dashboardQuickStart;
+
+  /// No description provided for @dashboardSystemEffectiveness.
+  ///
+  /// In id, this message translates to:
+  /// **'Efektivitas sistem (Semua vs Standar)'**
+  String get dashboardSystemEffectiveness;
+
+  /// No description provided for @dashboardJudgementDistribution.
+  ///
+  /// In id, this message translates to:
+  /// **'Distribusi penilaian'**
+  String get dashboardJudgementDistribution;
+
+  /// No description provided for @dashboardAgreementTrend.
+  ///
+  /// In id, this message translates to:
+  /// **'Tren kesesuaian'**
+  String get dashboardAgreementTrend;
+
+  /// No description provided for @dashboardAuditAttention.
+  ///
+  /// In id, this message translates to:
+  /// **'Perlu perhatian'**
+  String get dashboardAuditAttention;
+
+  /// No description provided for @dashboardSystemHealth.
+  ///
+  /// In id, this message translates to:
+  /// **'Kesehatan sistem'**
+  String get dashboardSystemHealth;
+
+  /// No description provided for @dashboardPendingUsers.
+  ///
+  /// In id, this message translates to:
+  /// **'User menunggu'**
+  String get dashboardPendingUsers;
+
+  /// No description provided for @dashboardForceClose.
+  ///
+  /// In id, this message translates to:
+  /// **'Tutup paksa'**
+  String get dashboardForceClose;
+
+  /// No description provided for @judgementAcceptable.
+  ///
+  /// In id, this message translates to:
+  /// **'Dapat diterima'**
+  String get judgementAcceptable;
+
+  /// No description provided for @judgementMarginal.
+  ///
+  /// In id, this message translates to:
+  /// **'Marginal'**
+  String get judgementMarginal;
+
+  /// No description provided for @judgementUnacceptable.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak dapat diterima'**
+  String get judgementUnacceptable;
+
+  /// No description provided for @actionCancel.
+  ///
+  /// In id, this message translates to:
+  /// **'Batal'**
+  String get actionCancel;
+
+  /// No description provided for @forceCloseConfirmMessage.
+  ///
+  /// In id, this message translates to:
+  /// **'Apakah Anda yakin ingin menutup sesi ini secara paksa? Peserta yang belum selesai akan menyimpan jawaban mereka tetapi tidak akan dievaluasi.'**
+  String get forceCloseConfirmMessage;
 }
 
 class _AppLocalizationsDelegate

@@ -364,4 +364,130 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get registerHeroSubtitle =>
       'Bergabung dengan sistem inspeksi kualitas perusahaan.';
+
+  @override
+  String get evaluationPageTitle => 'Evaluasi sesi';
+
+  @override
+  String get evaluationAgreementTitle => 'Kesesuaian sesi';
+
+  @override
+  String get evaluationBetweenAgreement => 'Kesesuaian antar peserta';
+
+  @override
+  String get evaluationAllVsStandard => 'Kesesuaian dengan standar';
+
+  @override
+  String get evaluationComparedSamples => 'Sampel dibandingkan';
+
+  @override
+  String get evaluationExcludedSamples => 'Sampel dikecualikan';
+
+  @override
+  String get evaluationParticipantsCompared => 'Peserta dibandingkan';
+
+  @override
+  String get evaluationNotAvailable => 'Tidak tersedia';
+
+  @override
+  String get evaluationAgreementUnavailableHint =>
+      'Kesesuaian membutuhkan minimal dua peserta yang menyelesaikan sesi dan minimal satu sampel yang dapat dibandingkan.';
+
+  @override
+  String get evaluationSessionToken => 'Token sesi';
+
+  @override
+  String get evaluationSessionDate => 'Tanggal sesi';
+
+  @override
+  String get evaluationSessionStatus => 'Status sesi';
+
+  @override
+  String get evaluationSamplesCount => 'Jumlah sampel';
+
+  @override
+  String get evaluationParticipantsCount => 'Jumlah peserta';
+
+  @override
+  String get evaluationParticipantsTitle => 'Metrik evaluasi peserta';
+
+  @override
+  String get evaluationParticipantName => 'Peserta';
+
+  @override
+  String get evaluationEffectiveness => 'Efektivitas';
+
+  @override
+  String get evaluationMissRate => 'Tingkat lolos';
+
+  @override
+  String get evaluationFalseAlarmRate => 'Tingkat alarm palsu';
+
+  @override
+  String get evaluationStatusHint => 'Status';
+
+  @override
+  String get statusIncomplete => 'Belum selesai';
+
+  @override
+  String get sessionStatusDraft => 'Draf';
+
+  @override
+  String get sessionStatusInProgress => 'Berlangsung';
+
+  @override
+  String get sessionStatusCompleted => 'Selesai';
+
+  @override
+  String get sessionStatusUnknown => 'Status belum dikenali';
+
+  @override
+  String get dashboardActiveSessions => 'Sesi aktif';
+
+  @override
+  String get dashboardInspectionProgress => 'Progress inspeksi';
+
+  @override
+  String get dashboardLastEffectiveness => 'Efektivitas terakhir';
+
+  @override
+  String get dashboardQuickStart => 'Mulai sesi cepat';
+
+  @override
+  String get dashboardSystemEffectiveness =>
+      'Efektivitas sistem (Semua vs Standar)';
+
+  @override
+  String get dashboardJudgementDistribution => 'Distribusi penilaian';
+
+  @override
+  String get dashboardAgreementTrend => 'Tren kesesuaian';
+
+  @override
+  String get dashboardAuditAttention => 'Perlu perhatian';
+
+  @override
+  String get dashboardSystemHealth => 'Kesehatan sistem';
+
+  @override
+  String get dashboardPendingUsers => 'User menunggu';
+
+  @override
+  String get dashboardForceClose => 'Tutup paksa';
+
+  @override
+  String get judgementAcceptable => 'Dapat diterima';
+
+  @override
+  String get judgementMarginal => 'Marginal';
+
+  @override
+  String get judgementUnacceptable => 'Tidak dapat diterima';
+
+  @override
+  String get actionCancel => 'Batal';
+
+  @override
+  String get forceCloseConfirmMessage =>
+      'Apakah Anda yakin ingin menutup sesi ini secara paksa? Peserta yang belum selesai akan menyimpan jawaban mereka tetapi tidak akan dievaluasi.';
 }

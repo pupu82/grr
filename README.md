@@ -28,7 +28,7 @@ lib/
 │   ├── user/              # User dan TeamSummary (UserResource)
 │   ├── master_data/       # Plant, Team, PartType, Sample, SampleKeyHistory
 │   ├── session/           # InspectionSession, SessionSample, Participant, Trial, Result
-│   ├── report/            # GrrEvaluation dan SessionEvaluation
+│   ├── report/            # GrrEvaluation, SessionEvaluation, EvaluationAgreement, ParticipantMetrics, SessionEvaluationResult
 │   └── model_json.dart    # Helper parsing JSON toleran yang dipakai semua model
 ├── pages/                 # Halaman UI / routing
 ├── router/                # Konfigurasi router navigasi
@@ -65,6 +65,9 @@ Model Flutter disinkronkan dengan model Eloquent Laravel di `app/Models` dan `ap
 | `InspectionResult` | `InspectionResult` | belum ditetapkan kontrak |
 | `GrrEvaluation` | `GrrEvaluation` | belum ditetapkan kontrak |
 | `SessionEvaluation` | `SessionEvaluation` | belum ditetapkan kontrak |
+| `EvaluationAgreement` | `SessionAgreementResult` | — |
+| `SessionEvaluationSummary` | computed evaluation session summary | `id` (uuid) |
+| `SessionEvaluationResult` | `SessionMetricsResource` | — |
 
 Aturan yang dijaga oleh lapisan model:
 
@@ -110,6 +113,7 @@ Semua request melewati satu instance Dio di `lib/utils/request.dart`:
 | `GET` | `/user` | Profil pengguna saat ini |
 | `POST` | `/logout` | Mencabut token aktif |
 | `POST` | `/password` | Mengubah password |
+| `GET` | `/sessions/{session}/evaluation` | Menghitung dan mengembalikan evaluasi atribusi (Admin, Manager) |
 
 ### Kode error yang ditangani
 
@@ -129,14 +133,13 @@ Semua request melewati satu instance Dio di `lib/utils/request.dart`:
 
 ### Batasan kontrak saat ini
 
-`docs/api-contract.md` (revisi 4) masih menandai endpoint dan field berikut sebagai **(planned)** atau **(open)**:
+`docs/api-contract.md` (revisi 13) sudah mendefinisikan endpoint sesi dan evaluasi. Sesi inspeksi, session sample, participant, result, dan evaluation kini ada di kontrak, tetapi bagian berikut masih belum dipublikasikan oleh backend:
 
-- Sesi inspeksi, session sample, participant, trial, result, dan evaluation.
 - Metrik AAA dan kriteria judgement.
 - Report dan export.
 - Identifier publik untuk session sample.
 
-Karena itu, model sesi/evaluasi sudah disiapkan mengikuti skema Laravel tetapi **belum boleh dipanggil melalui API** sampai kontrak resmi diperbarui. Perubahan kontrak harus disertai pembaruan salinan di `docs/api-contract.md` dan model/tes terkait.
+Evaluasi sesi kini menampilkan `agreement.between_agreement` dan `agreement.all_vs_standard` (string desimal atau `null`) bersama konteks `participants_compared`, `compared_samples` dan `excluded_samples`, serta metrik bagi-partisipan (`effectiveness`, `miss_rate`, `false_alarm_rate`) dan hitungan mentah (`decisions`, `correct_decisions`, `defect_decisions`, `good_decisions`, `missed_defects`, `false_alarms`, `timed_out_samples`). Flutter tidak pernah menghitung nilai ini; backend tetap satu-satunya sumber perhitungan. Perubahan kontrak harus disertai pembaruan salinan di `docs/api-contract.md` dan model/tes terkait.
 
 ## 6. Autentikasi
 

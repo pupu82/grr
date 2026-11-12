@@ -61,4 +61,19 @@ abstract final class ApiEndpoints {
 
   /// Changes the password and clears the mandatory change.
   static const String changePassword = '/password';
+
+  /// Computes the attribute agreement metrics of a completed session.
+  ///
+  /// Admin and Manager only. The session parameter is the public UUID.
+  static String sessionEvaluation(String sessionId) =>
+      '/sessions/${Uri.encodeComponent(sessionId)}/evaluation';
+
+  /// Lists all sessions for Admin/Manager, or the current user's sessions for Inspector.
+  ///
+  /// Supports optional filters: `status`, `team_id`, `part_type_id`.
+  static String sessions() => '/sessions';
+
+  /// Force-closes an in-progress session. Admin only.
+  static String sessionClose(String sessionId) =>
+      '/sessions/${Uri.encodeComponent(sessionId)}/close';
 }

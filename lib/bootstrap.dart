@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'api/auth_api.dart';
+import 'api/session_api.dart';
 import 'constants/app_constants.dart';
 import 'generated/localization/app_localizations.dart';
 import 'router/app_router.dart';
 import 'router/app_routes.dart';
 import 'store/auth/auth_store.dart';
 import 'store/locale/locale_store.dart';
+import 'store/sessions/dashboard_sessions_store.dart';
+import 'store/sessions/session_evaluation_store.dart';
 import 'theme/app_theme.dart';
 import 'utils/app_config.dart';
 import 'utils/request.dart';
@@ -37,6 +40,9 @@ Future<void> bootstrap() async {
     storage: sessionStorage,
   );
   final localeStore = LocaleStore(storage: localeStorage);
+  final sessionApi = SessionApi(requestClient.dio);
+  final sessionEvaluationStore = SessionEvaluationStore(api: sessionApi);
+  final dashboardSessionsStore = DashboardSessionsStore(api: sessionApi);
 
   await Future.wait<void>([authStore.restoreSession(), localeStore.restore()]);
 
@@ -44,6 +50,8 @@ Future<void> bootstrap() async {
     GrrApp(
       authStore: authStore,
       localeStore: localeStore,
+      sessionEvaluationStore: sessionEvaluationStore,
+      dashboardSessionsStore: dashboardSessionsStore,
       router: const AppRouter(),
     ),
   );
@@ -55,11 +63,15 @@ class GrrApp extends StatelessWidget {
     super.key,
     required this.authStore,
     required this.localeStore,
+    required this.sessionEvaluationStore,
+    required this.dashboardSessionsStore,
     required this.router,
   });
 
   final AuthStore authStore;
   final LocaleStore localeStore;
+  final SessionEvaluationStore sessionEvaluationStore;
+  final DashboardSessionsStore dashboardSessionsStore;
   final AppRouter router;
 
   @override
@@ -68,6 +80,12 @@ class GrrApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AuthStore>.value(value: authStore),
         ChangeNotifierProvider<LocaleStore>.value(value: localeStore),
+        ChangeNotifierProvider<SessionEvaluationStore>.value(
+          value: sessionEvaluationStore,
+        ),
+        ChangeNotifierProvider<DashboardSessionsStore>.value(
+          value: dashboardSessionsStore,
+        ),
       ],
       child: _AppView(router: router),
     );

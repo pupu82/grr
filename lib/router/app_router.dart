@@ -6,6 +6,7 @@ import '../pages/auth/login_page.dart';
 import '../pages/auth/register_page.dart';
 import '../pages/component_demo/components_page.dart';
 import '../pages/dashboard/dashboard_page.dart';
+import '../pages/reports/session_evaluation_page.dart';
 import '../pages/settings/settings_page.dart';
 import '../store/auth/auth_store.dart';
 import 'app_routes.dart';
@@ -33,6 +34,12 @@ class AppRouter {
   }
 
   WidgetBuilder? _builderFor(String? name) {
+    final sessionEvaluationId = _sessionEvaluationId(name);
+    if (sessionEvaluationId != null) {
+      final sessionId = sessionEvaluationId;
+      return (_) => SessionEvaluationPage(sessionId: sessionId);
+    }
+
     return switch (name) {
       AppRoutes.root => (_) => const AuthGate(),
       AppRoutes.login => (_) => const LoginPage(),
@@ -42,6 +49,21 @@ class AppRouter {
       AppRoutes.settings => (_) => const SettingsPage(),
       _ => null,
     };
+  }
+
+  static final RegExp _sessionEvaluationRoute = RegExp(
+    r'^/sessions/([^/]+)/evaluation\$',
+  );
+
+  static String? _sessionEvaluationId(String? name) {
+    if (name == null) {
+      return null;
+    }
+    final match = _sessionEvaluationRoute.firstMatch(name);
+    if (match == null) {
+      return null;
+    }
+    return Uri.decodeComponent(match.group(1)!);
   }
 }
 

@@ -340,4 +340,129 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get registerHeroSubtitle => '사내 품질 검사 시스템에 참여하세요.';
+
+  @override
+  String get evaluationPageTitle => '세션 평가';
+
+  @override
+  String get evaluationAgreementTitle => '세션 일치도';
+
+  @override
+  String get evaluationBetweenAgreement => '평가자 간 일치도';
+
+  @override
+  String get evaluationAllVsStandard => '표준 대비 일치도';
+
+  @override
+  String get evaluationComparedSamples => '비교된 샘플';
+
+  @override
+  String get evaluationExcludedSamples => '제외된 샘플';
+
+  @override
+  String get evaluationParticipantsCompared => '비교된 평가자';
+
+  @override
+  String get evaluationNotAvailable => '사용할 수 없음';
+
+  @override
+  String get evaluationAgreementUnavailableHint =>
+      '일치도는 세션을 완료한 평가자가 두 명 이상이고 비교 가능한 샘플이 하나 이상 있어야 계산됩니다.';
+
+  @override
+  String get evaluationSessionToken => '세션 토큰';
+
+  @override
+  String get evaluationSessionDate => '세션 날짜';
+
+  @override
+  String get evaluationSessionStatus => '세션 상태';
+
+  @override
+  String get evaluationSamplesCount => '샘플 수';
+
+  @override
+  String get evaluationParticipantsCount => '평가자 수';
+
+  @override
+  String get evaluationParticipantsTitle => '평가자 평가 지표';
+
+  @override
+  String get evaluationParticipantName => '평가자';
+
+  @override
+  String get evaluationEffectiveness => '유효성';
+
+  @override
+  String get evaluationMissRate => '미스율';
+
+  @override
+  String get evaluationFalseAlarmRate => '오경보율';
+
+  @override
+  String get evaluationStatusHint => '상태';
+
+  @override
+  String get statusIncomplete => '미완료';
+
+  @override
+  String get sessionStatusDraft => '초안';
+
+  @override
+  String get sessionStatusInProgress => '진행 중';
+
+  @override
+  String get sessionStatusCompleted => '완료';
+
+  @override
+  String get sessionStatusUnknown => '알 수 없는 상태';
+
+  @override
+  String get dashboardActiveSessions => '활성 세션';
+
+  @override
+  String get dashboardInspectionProgress => '검사 진행 상황';
+
+  @override
+  String get dashboardLastEffectiveness => '최근 유효성';
+
+  @override
+  String get dashboardQuickStart => '세션 빠른 시작';
+
+  @override
+  String get dashboardSystemEffectiveness => '시스템 유효성 (전체 vs 표준)';
+
+  @override
+  String get dashboardJudgementDistribution => '판단 분포';
+
+  @override
+  String get dashboardAgreementTrend => '일치 트렌드';
+
+  @override
+  String get dashboardAuditAttention => '주의 필요';
+
+  @override
+  String get dashboardSystemHealth => '시스템 상태';
+
+  @override
+  String get dashboardPendingUsers => '대기 중인 사용자';
+
+  @override
+  String get dashboardForceClose => '강제 종료';
+
+  @override
+  String get judgementAcceptable => '합격';
+
+  @override
+  String get judgementMarginal => '경계';
+
+  @override
+  String get judgementUnacceptable => '불합격';
+
+  @override
+  String get actionCancel => '취소';
+
+  @override
+  String get forceCloseConfirmMessage =>
+      '이 세션을 강제 종료하시겠습니까? 미완료된 참가자는 저장된 답변을 유지하지만 평가되지 않습니다.';
 }

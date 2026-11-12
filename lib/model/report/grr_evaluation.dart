@@ -8,9 +8,6 @@ import '../model_json.dart';
 /// Mirrors `App\Models\GrrEvaluation`. Laravel casts the metrics with
 /// `decimal:2`; the contract says decimal metrics arrive as strings, so they
 /// are parsed into [double] values. `null` means "not available".
-///
-/// The judgement thresholds and values are provisional in the contract. The
-/// client must not derive or display a judgement on its own.
 @immutable
 class GrrEvaluation {
   const GrrEvaluation({
@@ -20,6 +17,13 @@ class GrrEvaluation {
     this.effectiveness,
     this.missRate,
     this.falseAlarmRate,
+    this.decisions,
+    this.correctDecisions,
+    this.defectDecisions,
+    this.goodDecisions,
+    this.missedDefects,
+    this.falseAlarms,
+    this.timedOutSamples,
     this.judgement,
     this.thresholds,
     this.computedAt,
@@ -35,6 +39,13 @@ class GrrEvaluation {
       effectiveness: readDecimal(json, 'effectiveness'),
       missRate: readDecimal(json, 'miss_rate'),
       falseAlarmRate: readDecimal(json, 'false_alarm_rate'),
+      decisions: readInt(json, 'decisions'),
+      correctDecisions: readInt(json, 'correct_decisions'),
+      defectDecisions: readInt(json, 'defect_decisions'),
+      goodDecisions: readInt(json, 'good_decisions'),
+      missedDefects: readInt(json, 'missed_defects'),
+      falseAlarms: readInt(json, 'false_alarms'),
+      timedOutSamples: readInt(json, 'timed_out_samples'),
       judgement: Judgement.tryParse(json['judgement']),
       thresholds: asJsonMap(json['thresholds']),
       computedAt: readDateTime(json, 'computed_at'),
@@ -43,27 +54,21 @@ class GrrEvaluation {
     );
   }
 
-  /// Internal identifier. Not a public contract identifier.
   final int? id;
-
-  /// Internal participant identifier. Not a public contract identifier.
   final int? participantId;
-
   final double? repeatability;
   final double? effectiveness;
-
-  /// Thesis display label: "P false". Never sent back to the backend.
   final double? missRate;
-
-  /// Thesis display label: "P mis". Never sent back to the backend.
   final double? falseAlarmRate;
-
-  /// `null` when the backend returns an unknown judgement value.
+  final int? decisions;
+  final int? correctDecisions;
+  final int? defectDecisions;
+  final int? goodDecisions;
+  final int? missedDefects;
+  final int? falseAlarms;
+  final int? timedOutSamples;
   final Judgement? judgement;
-
-  /// Raw threshold payload. The keys are not part of the contract yet.
   final Map<String, dynamic>? thresholds;
-
   final DateTime? computedAt;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -76,6 +81,13 @@ class GrrEvaluation {
     putIfNotNull(json, 'effectiveness', effectiveness);
     putIfNotNull(json, 'miss_rate', missRate);
     putIfNotNull(json, 'false_alarm_rate', falseAlarmRate);
+    putIfNotNull(json, 'decisions', decisions);
+    putIfNotNull(json, 'correct_decisions', correctDecisions);
+    putIfNotNull(json, 'defect_decisions', defectDecisions);
+    putIfNotNull(json, 'good_decisions', goodDecisions);
+    putIfNotNull(json, 'missed_defects', missedDefects);
+    putIfNotNull(json, 'false_alarms', falseAlarms);
+    putIfNotNull(json, 'timed_out_samples', timedOutSamples);
     putIfNotNull(json, 'judgement', judgement?.apiValue);
     putIfNotNull(json, 'thresholds', thresholds);
     putIfNotNull(json, 'computed_at', computedAt?.toIso8601String());

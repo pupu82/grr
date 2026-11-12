@@ -180,6 +180,11 @@ While `must_change_password` is true (backend returns `password_change_required`
 - A reset leaves role, status and team unchanged. Do not hide or enable actions based on who reset whom.
 - The server-only break-glass command for the last active admin is not part of the API. Never call it from the client, document it as a client action or expose it in the UI.
 
+**Profile changes.**
+- `PATCH /api/v1/users/{user}` changes the display `name`. Only an admin may send `team_id`; never send `employee_code`, `role`, `status` or password fields, and do not build a form for them.
+- `POST /api/v1/users/{user}/reactivate` is admin-only and accepts only an `inactive` account. Send `team_id` only when the response shows the account has no team.
+- A role change is not an update. Do not offer it in the UI until the contract adds an endpoint.
+
 Roles (`admin`, `manager`, `inspector`):
 
 | Role | Responsibility |
@@ -194,6 +199,14 @@ Roles (`admin`, `manager`, `inspector`):
 ## 11. Gauge R&R Rules
 Never calculate `miss_rate`, `false_alarm_rate` or `effectiveness` in Flutter. Laravel owns the formulas, thresholds, evaluation and judgement. Do not infer a judgement from displayed percentages, and do not invent thresholds.
 The thesis labels `miss_rate` as "P false" and `false_alarm_rate` as "P mis". These are display labels only and never replace backend identifiers.
+
+**Evaluation access:**
+- `GET /api/v1/sessions/{session}/evaluation` is Admin and Manager only. Do not call it for an inspector and do not build UI that relies on it for them; an inspector reads their own data from the results endpoint.
+- The evaluation response contains a `participants` array. Each participant entry has `participant_id`, `user` (`id` = uuid, `employee_code`, `name`), `started_at`, `completed_at`, `is_complete`, and a `metrics` object. `metrics` has `effectiveness`, `miss_rate` and `false_alarm_rate` (each a string with exactly two decimals, or `null` when its denominator is zero), plus integer counts `decisions`, `correct_decisions`, `defect_decisions`, `good_decisions`, `missed_defects`, `false_alarms` and `timed_out_samples`. `null` means the rate has no population to divide by, never `0`.
+- The response also has an `agreement` object with `between_agreement` and `all_vs_standard` (decimal strings with two decimals, or `null`), plus `participants_compared`, `compared_samples` and `excluded_samples` as context. `null` means the rate has no population to divide by, never `0`.
+- `is_complete` is `false` for a participant of a force-closed session who never finished; their `metrics` cover only the stored verdicts and they are not part of `agreement`. A soft-deleted inspector still appears in the evaluation.
+- The response still has no `judgement`, `thresholds` or `repeatability`. Do not display or derive any of them. Never calculate `between_agreement`, `all_vs_standard` or any other metric in Flutter; display the backend values only.
+- The endpoint is computed on demand and is read-only. Do not cache it as persisted data or assume the numbers are stored on the server.
 
 **Verdicts and Outcomes:**
 - The backend verdict values are exactly `good` and `defect`. Send and store them unchanged. Never replace them with `G`, `N` or translated labels in API communication. Localized display labels are allowed.

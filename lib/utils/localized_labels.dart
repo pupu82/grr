@@ -30,3 +30,13 @@ String localizeVerdict(AppLocalizations l10n, Verdict verdict) {
     Verdict.defect => l10n.verdictDefect,
   };
 }
+
+/// Localized presentation of a backend session status.
+String localizeSessionStatus(AppLocalizations l10n, SessionStatus? status) {
+  return switch (status) {
+    SessionStatus.draft => l10n.sessionStatusDraft,
+    SessionStatus.inProgress => l10n.sessionStatusInProgress,
+    SessionStatus.completed => l10n.sessionStatusCompleted,
+    null => l10n.sessionStatusUnknown,
+  };
+}

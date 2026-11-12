@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/buttons/app_button.dart';
 import '../../constants/app_constants.dart';
 import '../../generated/localization/app_localizations.dart';
+import '../../constants/app_enums.dart';
 import '../../model/user/user.dart';
 import '../../router/app_routes.dart';
 import '../../store/auth/auth_store.dart';
+import '../../store/sessions/dashboard_sessions_store.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/localized_labels.dart';
+import '../dashboard/inspector_dashboard.dart';
+import '../dashboard/manager_dashboard.dart';
+import '../dashboard/admin_dashboard.dart';
 
 /// Landing screen for authenticated users.
 ///
-/// Feature modules (inspection, sessions, reports) will replace the placeholder
-/// content once their backend contracts are available.
+/// Renders role-specific dashboard content: Inspector, Manager, or Admin.
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
@@ -23,6 +26,7 @@ class DashboardPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final store = context.watch<AuthStore>();
     final user = store.user;
+    final role = user?.role;
 
     return Scaffold(
       appBar: AppBar(
@@ -52,30 +56,11 @@ class DashboardPage extends StatelessWidget {
                 children: [
                   _ProfileCard(user: user, palette: palette),
                   const SizedBox(height: AppSpacing.lg),
-                  _PlaceholderCard(palette: palette),
-                  const SizedBox(height: AppSpacing.lg),
-                  Wrap(
-                    spacing: AppSpacing.md,
-                    runSpacing: AppSpacing.md,
-                    children: [
-                      AppButton(
-                        label: l10n.viewComponentsAction,
-                        variant: AppButtonVariant.outline,
-                        icon: Icons.widgets_outlined,
-                        expand: false,
-                        onPressed: () =>
-                            Navigator.of(context)
-                                .pushNamed(AppRoutes.componentDemo),
-                      ),
-                      AppButton(
-                        label: l10n.settingsAction,
-                        variant: AppButtonVariant.outline,
-                        icon: Icons.settings_outlined,
-                        expand: false,
-                        onPressed: () =>
-                            Navigator.of(context).pushNamed(AppRoutes.settings),
-                      ),
-                    ],
+                  _renderRoleDashboard(
+                    context: context,
+                    role: role,
+                    user: user,
+                    palette: palette,
                   ),
                 ],
               ),
@@ -84,6 +69,38 @@ class DashboardPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _renderRoleDashboard({
+    required BuildContext context,
+    required UserRole? role,
+    required User? user,
+    required AppPalette palette,
+  }) {
+    final sessionsStore = context.read<DashboardSessionsStore>();
+
+    switch (role) {
+      case UserRole.inspector:
+        return InspectorDashboard(
+          user: user,
+          palette: palette,
+          sessionsStore: sessionsStore,
+        );
+      case UserRole.manager:
+        return ManagerDashboard(
+          user: user,
+          palette: palette,
+          sessionsStore: sessionsStore,
+        );
+      case UserRole.admin:
+        return AdminDashboard(
+          user: user,
+          palette: palette,
+          sessionsStore: sessionsStore,
+        );
+      default:
+        return _PlaceholderCard(palette: palette);
+    }
   }
 }
 
